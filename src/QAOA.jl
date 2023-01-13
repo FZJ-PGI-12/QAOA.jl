@@ -1,6 +1,6 @@
 module QAOA
 
-using Yao, Zygote
+using Yao, YaoBlocks, Zygote
 using Parameters
 using NLopt
 import Random
