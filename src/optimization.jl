@@ -6,9 +6,12 @@ end
 
 function dispatch_parameters(circ, problem::Problem, beta_and_gamma)
     @unpack_Problem problem
+    # the number of driver parameters is the number of parameters in the circuit
+    # divided by the number of layers, minus the number of problem parameters
+    num_driver_parameters = (nparameters(circ) ÷ num_layers) - (num_qubits + num_qubits * (num_qubits - 1) ÷ 2)
     circ = dispatch(circ, reduce(vcat,
                                     [vcat(beta_and_gamma[l + num_layers] .* problem_parameters(local_fields, couplings),
-                                          beta_and_gamma[l] .* 2. .* ones(num_qubits)
+                                          beta_and_gamma[l] .* 2. .* ones(num_driver_parameters)
                                          )
                                     for l in 1:num_layers]
                                 )
