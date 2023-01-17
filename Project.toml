@@ -3,6 +3,7 @@ uuid = "814bfb56-6688-4460-8fd4-bc1ff2cd6cd4"
 authors = ["Tim Bode"]
 
 [deps]
+DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 NLopt = "76087f3c-5699-56af-9a33-bf431cd00edd"
