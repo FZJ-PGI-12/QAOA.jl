@@ -16,6 +16,12 @@ julia> ] add QAOA
 ```@index
 ```
 
+### Problem Structure
+
+```@docs
+Problem{}
+```
+
 
 ### Predefined Optimization Problems
 
