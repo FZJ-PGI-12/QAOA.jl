@@ -14,13 +14,25 @@ function objective_function(num_qubits::Int)
     [local_field_gates(num_qubits), coupling_gates(num_qubits)] |> chain
 end
 
+# X
 function driver(num_qubits::Int, G::YaoBlocks.PauliGate)
     local_field_gates(num_qubits, G)
 end
 
+# [X, X]
 function driver(num_qubits::Int, G::Vector{<:YaoBlocks.PauliGate})
     @assert size(G)[1] == 2
     coupling_gates(num_qubits, G)
+end
+
+# [[X, X]]
+function driver(num_qubits::Int, Gs::Vector{Vector{T}}) where T
+    [coupling_gates(num_qubits, G) for G in Gs] |> chain
+end
+
+# [[X, X], [Y, Y]]
+function driver(num_qubits::Int, Gs::Array{Array{T, 1} where T, 1}) 
+    [coupling_gates(num_qubits, G) for G in Gs] |> chain
 end
 
 function layer(problem::Problem)
