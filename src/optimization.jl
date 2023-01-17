@@ -1,13 +1,27 @@
+"""
+    problem_parameters(local_fields::Vector{Real}, couplings::Matrix{Real})::Vector{Real}
+
+Returns the problem parameters in the proper order, such that they can be `dispatch`ed to the circuit directly.
+
+### Notes
+- The macro `Zygote.@nograd` is necessary because `Zygote` does not support automatic differentiation through mutating code.
+"""
 Zygote.@nograd function problem_parameters(local_fields::Vector{Real}, couplings::Matrix{Real})::Vector{Real}
     num_qubits = size(local_fields)[1]
     vcat(2 .* local_fields, [2 * couplings[i, j] for j in 1:num_qubits for i in 1:j-1])
 end
 
+"""
+    dispatch_parameters(circ, problem::Problem, beta_and_gamma)
 
+Returns the circuit with the all parameters in the proper places.    
+
+### Notes
+- The number of driver parameters is the number of parameters in the circuit divided by the number of layers, minus the number of problem parameters.
+"""
 function dispatch_parameters(circ, problem::Problem, beta_and_gamma)
     @unpack_Problem problem
-    # the number of driver parameters is the number of parameters in the circuit
-    # divided by the number of layers, minus the number of problem parameters
+
     num_driver_parameters = (nparameters(circ) ÷ num_layers) - (num_qubits + num_qubits * (num_qubits - 1) ÷ 2)
     circ = dispatch(circ, reduce(vcat,
                                     [vcat(beta_and_gamma[l + num_layers] .* problem_parameters(local_fields, couplings),
@@ -19,7 +33,14 @@ function dispatch_parameters(circ, problem::Problem, beta_and_gamma)
     circ
 end
 
+"""
+    problem_hamiltonian(problem::Problem)
 
+Returns the problem Hamiltonian corresponding to `problem`.
+
+### Notes
+- The macro `Zygote.@nograd` is necessary because `Zygote` does not support automatic differentiation through mutating code.
+"""
 Zygote.@nograd function problem_hamiltonian(problem::Problem)
     H =  sum([problem.local_fields[i] * put(i => Z)(problem.num_qubits) for i in 1:problem.num_qubits])
     H += sum([problem.couplings[i, j] * put((i, j) => kron(Z, Z))(problem.num_qubits) for j in 1:problem.num_qubits for i in 1:j-1])

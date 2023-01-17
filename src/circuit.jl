@@ -1,7 +1,10 @@
 """
     local_field_gates(num_qubits::Int, operator=Z)
 
-Returns the single-qubit rotation gates corresponding to the local part of the problem (driver) Hamiltonian.    
+Returns the single-qubit rotation gates corresponding to the local part of the problem (driver) Hamiltonian.
+
+### Notes
+- The gates are initialized with trivial parameters, which are then overwritten explicitly elsewhere.
 """
 function local_field_gates(num_qubits::Int, operator=Z)
     return [put(i => RotationGate(operator, 0.))(num_qubits) for i in 1:num_qubits] |> chain
@@ -13,6 +16,9 @@ end
 
 Returns the two-qubit rotation gates corresponding to the coupling term of the Hamiltonian. 
 Alternatively, this function is used to construct two-qubit drivers such as ``\\hat X_i \\hat X_j``.
+
+### Notes
+- The gates are initialized with trivial parameters, which are then overwritten explicitly elsewhere.
 """
 function coupling_gates(num_qubits::Int, operators=[Z, Z])
     return [put((i, j) => RotationGate(kron(operators...), 0.))(num_qubits) for j in 1:num_qubits for i in 1:j-1] |> chain
