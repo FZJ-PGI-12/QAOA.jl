@@ -1,16 +1,15 @@
-using PyCall
 np = pyimport("numpy")
 nx = pyimport("networkx")
 
 """
-sherrington_kirkpatrick(variance::Float64; seed::Float64=1.0, num_layers::Int=1, driver=X)
+    sherrington_kirkpatrick(variance::Float64; seed::Float64=1.0, num_layers::Int=1, driver=X)
 
 Wrapper function setting up an instance of the Sherrington-Kirkpatrick model.
 
 ### Input
 - `N::Int`: The number of spins of the problem.
 - `variance::Float64`: The variance of the distribution of the coupling matrix.
-- 'seed::Float64=1.0': The seed for the random-number generator used in the coupling matrix.
+- `seed::Float64=1.0`: The seed for the random-number generator used in the coupling matrix.
 - `num_layers::Int=1` (optional): The number of QAOA layers usually denoted by ``p``.
 - `driver=X` (optional): The driver or mixer used in the QAOA.
 
@@ -37,7 +36,7 @@ end
 
 
 """
-partition_problem(a::Vector{Float64}; num_layers::Int=1, driver=X)
+    partition_problem(a::Vector{Float64}; num_layers::Int=1, driver=X)
 
 Wrapper function setting up an instance of the partition problem.
 
@@ -74,7 +73,7 @@ end
 Wrapper function setting up an instance of the MaxCut problem for the graph `graph`.
 
 ### Input
-- `graph::PyObject`: The input graph, must be a Python NetworkX graph.
+- `graph::PyObject`: The input graph, must be a [Python NetworkX](https://networkx.org/) graph.
 - `num_layers::Int=1` (optional): The number of QAOA layers usually denoted by ``p``.
 - `driver=X` (optional): The driver or mixer used in the QAOA.
 
@@ -85,7 +84,7 @@ Wrapper function setting up an instance of the MaxCut problem for the graph `gra
 The cost function for the MaxCut problem as defined in the [original QAOA paper](https://arxiv.org/abs/1411.4028) is
 
 ``
-\\hat C = \\frac{1}{2} \\sum_{(i, j) \\in E(G)} (1 - \\hat Z_i \\hat Z_j),
+\\hat C = -\\frac{1}{2} \\sum_{(i, j) \\in E(G)} \\hat Z_i \\hat Z_j + \\mathrm{const.},
 ``
     
 where ``E(G)`` is the set of edges of the graph ``G``.
@@ -110,7 +109,7 @@ end
 Wrapper function setting up a problem instance for the minimum vertex cover of the graph `graph`.
 
 ### Input
-- `graph::PyObject`: The input graph, must be a Python NetworkX graph.
+- `graph::PyObject`: The input graph, must be a [Python NetworkX](https://networkx.org/) graph.
 - `num_layers::Int=1` (optional): The number of QAOA layers usually denoted by ``p``.
 - `driver=X` (optional): The driver or mixer used in the QAOA.
 

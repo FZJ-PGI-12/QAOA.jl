@@ -1,9 +1,11 @@
 module QAOA
 
+export sherrington_kirkpatrick, partition_problem, max_cut, min_vertex_cover
+
 using Yao, YaoBlocks, Zygote
 using Parameters
 using NLopt
-import Random
+using PyCall
 
 include("problem.jl")
 include("circuit.jl")
