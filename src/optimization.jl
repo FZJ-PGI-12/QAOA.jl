@@ -27,7 +27,6 @@ Zygote.@nograd function problem_hamiltonian(problem::Problem)
 end
 
 function cost_function(problem::Problem, beta_and_gamma)::Real
-    @unpack_Problem problem
     circ = circuit(problem)
     circ = dispatch_parameters(circ, problem, beta_and_gamma)
     reg = apply(uniform_state(nqubits(circ)), circ)
@@ -36,11 +35,11 @@ end
 
 
 function optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}, algorithm; niter::Int=128)
-    @unpack_Problem problem
 
-    opt = Opt(algorithm, 2num_layers)
+    opt = Opt(algorithm, 2problem.num_layers)
     opt.lower_bounds = 0.
-    opt.upper_bounds = pi .* vcat([1 for _ in 1:num_layers], [2 for _ in 1:num_layers])
+    # CHANGE BOUNDS?!
+    opt.upper_bounds = pi .* vcat([1 for _ in 1:problem.num_layers], [2 for _ in 1:problem.num_layers])
     opt.maxeval = niter
     # opt.xtol_rel = 1e-5
     # opt.xtol_abs = 1e-5
@@ -54,13 +53,12 @@ function optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}, 
 
     circ = circuit(problem)
     circ = dispatch_parameters(circ, problem, params)
-    probabilities = uniform_state(num_qubits) |> circ |> probs
+    probabilities = uniform_state(nqubits(circ)) |> circ |> probs
     cost, params, probabilities
 end
 
 
 function optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}; niter::Int=128, learning_rate::Float64 = 0.05)
-    @unpack_Problem problem
 
     f = x -> cost_function(problem, x)
 
@@ -75,7 +73,7 @@ function optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}; 
 
     circ = circuit(problem)
     circ = dispatch_parameters(circ, problem, params)
-    probabilities = uniform_state(num_qubits) |> circ |> probs
+    probabilities = uniform_state(nqubits(circ)) |> circ |> probs
     cost, params, probabilities
 end
 
