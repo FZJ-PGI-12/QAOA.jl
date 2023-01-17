@@ -18,7 +18,8 @@ $(TYPEDFIELDS)
     "The coupling matrix of the Ising problem Hamiltonian."
     couplings::Matrix{Real}
 
-    "The driver of the QAOA circuit. By default the Pauli matrix `X`. May also be set to, e.g., `[[X, X], [Y, Y]]` to obtain the driver ``\\hat X_i \\hat X_j + \\hat Y_i \\hat Y_j``."
+    "The driver of the QAOA circuit. By default the Pauli matrix `X`. May also be set to, 
+    e.g., `[[X, X], [Y, Y]]` to obtain the drivers``\\hat X_i \\hat X_j + \\hat Y_i \\hat Y_j`` acting on every pair of qubits."
     driver
 
     Problem(num_layers, local_fields, couplings) = new(size(local_fields)[1], num_layers, local_fields, couplings, X)

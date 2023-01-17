@@ -1,5 +1,7 @@
 # Welcome!
 
+`QAOA.jl` is a lightweight implementation of the [Quantum Approximate Optimization Algorithm (QAOA)](https://arxiv.org/abs/1411.4028) based on [`Yao.jl`](https://github.com/QuantumBFS/Yao.jl).
+
 ## Installation
 
 To install, use Julia's built-in package manager
@@ -20,6 +22,14 @@ julia> ] add QAOA
 
 ```@docs
 Problem{}
+```
+
+### Cost Function and QAOA Parameter Optimization
+
+```@docs
+cost_function(problem::Problem, beta_and_gamma::Vector{Float64})
+optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}, algorithm; niter::Int=128)
+optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}; niter::Int=128, learning_rate::Float64 = 0.05)
 ```
 
 
