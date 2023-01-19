@@ -219,3 +219,4 @@ bin/	binary
 *.R text
       
 
+notebooks/** linguist-vendored
