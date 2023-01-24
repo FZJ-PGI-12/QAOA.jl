@@ -66,20 +66,20 @@ e.g., `G==[X, X]` corresponds to drivers ``\\hat X_i \\hat X_j`` on all pairs of
 function driver(problem::Problem, G::Vector{<:YaoBlocks.PauliGate})
     @unpack_Problem problem
     @assert size(G)[1] == 2
-    edges = findall(x -> x == 1, J .!= 0.0)
+    edges = findall(x -> x == 1, couplings .!= 0.0)
     coupling_gates(edges, num_qubits, G)
 end
 
 
 """
-    driver(num_qubits::Int, Gs::Array{Array{T, 1} where T, 1}) 
+    driver(problem::Problem, Gs::Vector{Vector{T} where T}) 
 
 Returns the gates for one driver layer constructed from sums over Kronecker products of two Pauli matrices, 
 e.g., `G==[[X, X], [Y, Y]]` corresponds to ``\\hat X_i \\hat X_j + \\hat Y_i \\hat Y_j`` on all pairs of connected qubits.       
 """
-function driver(problem::Problem, Gs::Array{Array{T, 1} where T, 1}) 
+function driver(problem::Problem, Gs::Vector{Vector{T} where T}) 
     @unpack_Problem problem
-    edges = findall(x -> x == 1, J .!= 0.0)
+    edges = findall(x -> x == 1, couplings .!= 0.0)
     [coupling_gates(edges, num_qubits, G) for G in Gs] |> chain
 end
 
@@ -95,7 +95,7 @@ e.g. `G==[[X, X]]` corresponds to ``\\hat X_i \\hat X_j``.
 """
 function driver(problem::Problem, Gs::Vector{Vector{T}}) where T
     @unpack_Problem problem
-    edges = findall(x -> x == 1, J .!= 0.0)
+    edges = findall(x -> x == 1, couplings .!= 0.0)
     [coupling_gates(edges, num_qubits, G) for G in Gs] |> chain
 end
 
