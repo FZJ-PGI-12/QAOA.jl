@@ -27,5 +27,10 @@ The demonstration of quantum advantage for a real-world problem is yet outstandi
 
 # Mathematics
 
+The cost function of the QAOA for a general quadratic optimization problem is typically defined as
+$$
+  \hat C &= - \sum_{i=1}^N \bigg[ h_i  + \sum_{j>i} J_{ij}  \hat{Z}_j \bigg] \hat{Z}_i,
+$$
+where the $h_i$, $J_{ij}$ are real numbers encoding the problem in question. 
 
 # References
