@@ -23,7 +23,11 @@ Quantum algorithms are an area of intensive research thanks to their potential o
 
 # Statement of need
 
-The demonstration of quantum advantage for a real-world problem is yet outstanding. Identifying such a problem and performing the actual demonstration on existing hardware will not be possible without intensive classical simulations. This makes a fast and versatile implementation of the QAOA rather desirable. As shown in Fig. 1, `QAOA.jl` is faster in this respect than `PennyLane` [@PennyLane], one of its main competitors in automatically differentiable QAOA implementations.
+The demonstration of quantum advantage for a real-world problem is yet outstanding. Identifying such a problem and performing the actual demonstration on existing hardware will not be possible without intensive classical simulations. This makes a fast and versatile implementation of the QAOA rather desirable. As shown in Fig. \autoref{fig:benchmarks}, `QAOA.jl` is faster in this respect than `PennyLane` [@PennyLane], one of its main competitors in automatically differentiable QAOA implementations.
+
+Figures can be included like this:
+![Fig. 1: .\label{fig:benchmarks}](benchmarks.pdf)
+
 
 # Mathematics 
 
