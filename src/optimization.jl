@@ -23,13 +23,12 @@ function dispatch_parameters(circ, problem::Problem, beta_and_gamma)
     @unpack_Problem problem
 
     num_driver_parameters = (nparameters(circ) ÷ num_layers) - (num_qubits + num_qubits * (num_qubits - 1) ÷ 2)
-    circ = dispatch(circ, reduce(vcat,
-                                    [vcat(beta_and_gamma[l + num_layers] .* problem_parameters(local_fields, couplings),
-                                          beta_and_gamma[l] .* 2. .* ones(num_driver_parameters)
-                                         )
-                                    for l in 1:num_layers]
-                                )
-                   )
+
+    concat_params = l -> vcat(beta_and_gamma[l + num_layers] .* problem_parameters(local_fields, couplings),
+                              beta_and_gamma[l] .* 2. .* ones(num_driver_parameters))
+
+    all_params = map(concat_params, 1:num_layers)
+    circ = dispatch(circ, reduce(vcat, all_params))
     circ
 end
 
