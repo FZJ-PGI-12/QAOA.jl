@@ -7,7 +7,7 @@ Returns the single-qubit rotation gates corresponding to the local part of the p
 - The gates are initialized with trivial parameters, which are then overwritten explicitly elsewhere.
 """
 function local_field_gates(num_qubits::Int, operator=Z)
-    return [put(i => RotationGate(operator, 0.))(num_qubits) for i in 1:num_qubits] |> chain
+    [put(i => RotationGate(operator, 0.))(num_qubits) for i in 1:num_qubits] |> chain
 end
 
 
@@ -20,7 +20,7 @@ Returns the two-qubit rotation gates corresponding to the coupling term of the H
 - The gates are initialized with trivial parameters, which are then overwritten explicitly elsewhere.
 """
 function coupling_gates(num_qubits::Int, operators=[Z, Z])
-    return [put((i, j) => RotationGate(kron(operators...), 0.))(num_qubits) for j in 1:num_qubits for i in 1:j-1] |> chain
+    [put((i, j) => RotationGate(kron(operators...), 0.))(num_qubits) for j in 1:num_qubits for i in 1:j-1] |> chain
 end
 
 
@@ -33,7 +33,7 @@ This function is used to construct two-qubit drivers such as ``\\hat X_i \\hat X
 - The gates are initialized with trivial parameters, which are then overwritten explicitly elsewhere.
 """
 function coupling_gates(edges, num_qubits::Int, operators)
-    return [put(edge => RotationGate(kron(operators...), 0.))(num_qubits) for edge in edges] |> chain
+    [put(edge => RotationGate(kron(operators...), 0.))(num_qubits) for edge in edges] |> chain
 end
 
 """
@@ -103,7 +103,8 @@ end
 Returns the circuit corresponding to one QAOA layer.
 """
 function layer(problem::Problem)
-    [objective_function(problem.num_qubits), driver(problem, problem.driver)] |> chain
+    [objective_function(problem.num_qubits), 
+     driver(problem, problem.driver)] |> chain
 end
 
 
