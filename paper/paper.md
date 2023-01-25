@@ -18,15 +18,15 @@ bibliography: paper.bib
 
 # Summary
 
-Quantum algorithms are an area of intensive research thanks to their potential of speeding up certain specific tasks exponentially. However, for the time being, high error rates on the existing hardware realizations preclude the application of many algorithms that are based on the assumption of fault-tolerant quantum computation. On such _noisy intermediate-scale quantum_ (NISQ) devices [@Preskill2018], the exploration of the potential of _heuristic_ quantum algorithms has attracted much interest. A leading candidate for solving combinatorial optimization problems is the so-called _quantum approximate optimization algorithm_ (QAOA) [@Farhi:2014]. `QAOA.jl` is a `Julia` package that implements the QAOA to enable the efficient classical simulation typically required in research on the topic. It is based on `Yao.jl` [@YaoFramework2019], [@Yao] and `Zygote.jl` [@ZygoteFramework], [@Zygote], making it both fast and automatically differentiable, thus enabling gradient-based optimization. A number of common optimization problems such as MaxCut, the minimum vertex-cover problem, the Sherrington-Kirkpatrick model, and the partition problem are pre-implemented to facilitate scientific benchmarking.
+Quantum algorithms are an area of intensive research thanks to their potential of speeding up certain specific tasks exponentially. However, for the time being, high error rates on the existing hardware realizations preclude the application of many algorithms that are based on the assumption of fault-tolerant quantum computation. On such _noisy intermediate-scale quantum_ (NISQ) devices [@Preskill2018], the exploration of the potential of _heuristic_ quantum algorithms has attracted much interest. A leading candidate for solving combinatorial optimization problems is the so-called _Quantum Approximate Optimization Algorithm_ (QAOA) [@Farhi:2014]. `QAOA.jl` is a `Julia` package [@bezanson2017julia] that implements the QAOA to enable the efficient classical simulation typically required in research on the topic. It is based on `Yao.jl` [@YaoFramework2019], [@Yao] and `Zygote.jl` [@ZygoteFramework], [@Zygote], making it both fast and automatically differentiable, thus enabling gradient-based optimization. A number of common optimization problems such as MaxCut, the minimum vertex-cover problem, the Sherrington-Kirkpatrick model, and the partition problem are pre-implemented to facilitate scientific benchmarking.
 
 
 # Statement of need
 
-The demonstration of quantum advantage for a real-world problem is yet outstanding. Identifying such a problem and performing the actual demonstration on existing hardware will not be possible without intensive classical simulations. This makes a fast and versatile implementation of the QAOA rather desirable. As shown in Fig. \autoref{fig:benchmarks}, `QAOA.jl` is faster in this respect than `PennyLane` [@PennyLane], one of its main competitors in automatically differentiable QAOA implementations.
+The demonstration of quantum advantage for a real-world problem is yet outstanding. Identifying such a problem and performing the actual demonstration on existing hardware will not be possible without intensive classical simulations. This makes a fast and versatile implementation of the QAOA rather desirable. As shown in \autoref{fig:benchmarks}, `QAOA.jl` is significantly faster than `PennyLane` [@PennyLane], one of its main competitors in automatically differentiable QAOA implementations. While Tensorflow Quantum [@tfq] supports automatic differentiation, there exists, to the author's knowledge, no dedicated implementation of the QAOA. The class `QAOA` offered by Qiskit [@Qiskit] must be _provided_ with a precomputed gradient operator, i.e. it does not feature automatic differentiation out of the box.
 
-Figures can be included like this:
-![Fig. 1: .\label{fig:benchmarks}](benchmarks.pdf)
+
+![Comparison of run times between `PennyLane` [@PennyLane] and `QAOA.jl` on an Apple M1 processor. The benchmarks $\Delta t$ are retrieved by performing 128 steps with the respective gradient optimizer on the same instance of size $N$ of the minimum vertex-cover problem.\label{fig:benchmarks}](benchmarks.pdf)
 
 
 # Mathematics 
@@ -57,5 +57,9 @@ $$
 \hat D = \sum_{(i, j)\in\mathcal{E}}  \left(\hat X_i \hat X_j + \hat Y_i \hat Y_j\right),
 $$
 where $\mathcal{E}$ is the set of connections or _edges_ for which the coupling matrix $J_{ij}$ is non-zero.
+
+# Acknowledgements
+
+
 
 # References
