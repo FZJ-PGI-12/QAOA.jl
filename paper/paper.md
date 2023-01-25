@@ -23,7 +23,7 @@ Quantum algorithms are an area of intensive research thanks to their potential o
 
 # Statement of need
 
-The demonstration of quantum advantage for a real-world problem is yet outstanding. Identifying such a problem and performing the actual demonstration on existing hardware will not be possible without intensive classical simulations. This makes a fast and versatile implementation of the QAOA rather desirable. As shown in Fig. 1, `QAOA.jl` is faster in this respect than `PennyLane` [@PennyLane], its main competitor in automatically differentiable QAOA implementations.
+The demonstration of quantum advantage for a real-world problem is yet outstanding. Identifying such a problem and performing the actual demonstration on existing hardware will not be possible without intensive classical simulations. This makes a fast and versatile implementation of the QAOA rather desirable. As shown in Fig. 1, `QAOA.jl` is faster in this respect than `PennyLane` [@PennyLane], one of its main competitors in automatically differentiable QAOA implementations.
 
 # Mathematics 
 
@@ -48,8 +48,10 @@ $$
   E_p(\boldsymbol{\beta}, \boldsymbol{\gamma}) = \langle\psi(\boldsymbol{\beta}, \boldsymbol{\gamma})| \hat C |\psi(\boldsymbol{\beta}, \boldsymbol{\gamma})\rangle
 $$
 over the variational parameters $\boldsymbol{\beta}, \boldsymbol{\gamma}$.
-
-`QAOA.jl` supports customizable drivers, e.g. $\hat D = \sum_{i=1}^N  \left(\hat X_i \hat X_j + \hat Y_i \hat Y_j\right)$.
-
+Note that `QAOA.jl` furthermore supports others drivers, e.g. 
+$$
+\hat D = \sum_{(i, j)\in\mathcal{E}}  \left(\hat X_i \hat X_j + \hat Y_i \hat Y_j\right),
+$$
+where $\mathcal{E}$ is the set of connections or _edges_ for which the coupling matrix $J_{ij}$ is non-zero.
 
 # References
