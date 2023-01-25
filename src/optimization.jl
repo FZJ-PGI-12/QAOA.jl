@@ -105,16 +105,12 @@ function optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}, 
 
     opt = Opt(algorithm, 2problem.num_layers)
     opt.lower_bounds = 0.
-    # CHANGE BOUNDS?!
-    opt.upper_bounds = pi .* vcat([1 for _ in 1:problem.num_layers], [2 for _ in 1:problem.num_layers])
+    opt.upper_bounds = 2pi .*ones(2problem.num_layers)
     opt.maxeval = niter
-    # opt.xtol_rel = 1e-5
-    # opt.xtol_abs = 1e-5
 
     f = (x, _) -> cost_function(problem, x)
 
     opt.max_objective = f
-    # opt.min_objective = f
 
     cost, params, info = optimize(opt, beta_and_gamma)
 
