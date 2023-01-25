@@ -18,12 +18,15 @@ $(TYPEDFIELDS)
     "The coupling matrix of the Ising problem Hamiltonian."
     couplings::Matrix{Real}
 
+    "The edges of the graph specified by the coupling matrix"
+    edges
+
     "The driver of the QAOA circuit. By default the Pauli matrix `X`. May also be set to, 
-    e.g., `[[X, X], [Y, Y]]` to obtain the drivers``\\hat X_i \\hat X_j + \\hat Y_i \\hat Y_j`` acting on every pair of qubits."
+    e.g., `[[X, X], [Y, Y]]` to obtain the drivers``\\hat X_i \\hat X_j + \\hat Y_i \\hat Y_j`` acting on every pair of connected qubits."
     driver
 
-    Problem(num_layers, local_fields, couplings) = new(size(local_fields)[1], num_layers, local_fields, couplings, X)
-    Problem(num_layers, local_fields, couplings, driver) = new(size(local_fields)[1], num_layers, local_fields, couplings, driver)
+    Problem(num_layers, local_fields, couplings) = new(size(local_fields)[1], num_layers, local_fields, couplings, findall(x -> x == 1, couplings .!= 0.0), X)
+    Problem(num_layers, local_fields, couplings, driver) = new(size(local_fields)[1], num_layers, local_fields, couplings, findall(x -> x == 1, couplings .!= 0.0), driver)
 end
 
 
