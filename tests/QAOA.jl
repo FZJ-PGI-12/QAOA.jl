@@ -37,6 +37,34 @@ include("./../src/QAOA.jl")
 end
 
 
+@testset "break Z2 symmetry" begin
+
+    num_qubits = 4
+    np.random.seed(1)
+    a = np.random.rand(num_qubits)
+    a = np.sort(a)
+
+    @test a ≈ [0.00011437481734488664, 0.30233257263183977, 0.417022004702574, 0.7203244934421581] rtol=1e-10
+
+    J = -2 * np.outer(a |> transpose, a)
+    np.fill_diagonal(J, 0.)
+
+    p = 3
+    beta_and_gamma = (pi/4)*ones(2p)
+
+    problem = QAOA.Problem(p, J)
+    circ = QAOA.circuit(problem)
+
+    circ = QAOA.dispatch_parameters(circ, problem, beta_and_gamma)
+
+    reg = uniform_state(nqubits(circ)) |> circ
+    loss = (expect(QAOA.problem_hamiltonian(problem), reg) |> real) - sum(a.^2)
+
+    @test loss ≈ -1.0165692236963693 rtol = 1e-10
+
+end
+
+
 @testset "number partitioning with standard annealing schedule" begin
 
     rtol = 1e-10
