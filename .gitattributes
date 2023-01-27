@@ -220,3 +220,4 @@ bin/	binary
       
 
 notebooks/** linguist-vendored
+paper/* linguist-vendored
