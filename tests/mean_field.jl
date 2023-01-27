@@ -11,7 +11,6 @@ include("./../src/QAOA.jl")
     β = τ .* (1 .- (1:p) ./ p) |> collect
     β[p] = τ / (4 * p)
 
-
     # initial spins
     N = 5
     S = [[1., 0., 0.] for _ in 1:N-1] # fix final spin (i.e. leave it out)
@@ -25,7 +24,7 @@ include("./../src/QAOA.jl")
     mf_problem = QAOA.Problem(p, J)
 
     # evolution
-    S = QAOA.evolve(S, J, β, γ)
+    S = QAOA.evolve(S, mf_problem.local_fields, mf_problem.couplings, β, γ)
     
     # solution
     S_test = [[-0.4280189887648497,  -0.57845514021309,     0.6943985858408479],
@@ -34,6 +33,6 @@ include("./../src/QAOA.jl")
               [ 0.06825210700086091,  0.5908423629410464,  -0.8038948638001017]]
     
     @test S ≈ S_test rtol = 1e-10                       
-    @test QAOA.expectation(S, J) ≈ -2.5367551470078142 rtol = 1e-10
+    @test QAOA.expectation(S, mf_problem.local_fields, mf_problem.couplings) ≈ -2.5367551470078142 rtol = 1e-10
     @test QAOA.mean_field_solution(mf_problem, β, γ) ≈ [ 1., -1., -1., -1.] rtol = 1e-10
 end
