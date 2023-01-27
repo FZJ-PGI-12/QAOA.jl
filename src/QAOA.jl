@@ -17,4 +17,6 @@ export sherrington_kirkpatrick, partition_problem, max_cut, min_vertex_cover
 
 include("circuit.jl")
 
+include("mean_field.jl")
+
 end
