@@ -6,6 +6,7 @@ authors = ["Tim Bode"]
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 NLopt = "76087f3c-5699-56af-9a33-bf431cd00edd"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"
 PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
