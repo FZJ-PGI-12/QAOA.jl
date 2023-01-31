@@ -1,6 +1,7 @@
 module QAOA
 
 using Yao, YaoBlocks, Zygote
+using LinearAlgebra
 using Parameters
 using NLopt
 using PyCall
@@ -18,5 +19,7 @@ export sherrington_kirkpatrick, partition_problem, max_cut, min_vertex_cover
 include("circuit.jl")
 
 include("mean_field.jl")
+
+include("fluctuations.jl")
 
 end
