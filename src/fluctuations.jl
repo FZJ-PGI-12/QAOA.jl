@@ -21,12 +21,12 @@ function evolve_fluctuations(problem::Problem, τ::Real, β::Vector{<:Real}, γ:
 
     for k in 1:size(γ)[1]
         for i in 1:num_qubits
-
             # we exclude a factor of 2 here because we symmetrize below
-            A[k][i, i] = β[k] * S[k][i][1] / (1 + solutions[i] * S[k][i][3]) + γ[k] * solutions[i] * magnetization(S[k], local_fields, couplings)[i]
+            # signs in front of β, γ are reversed relative to the original paper
+            A[k][i, i] = -β[k] * S[k][i][1] / (1 + solutions[i] * S[k][i][3]) - γ[k] * solutions[i] * magnetization(S[k], local_fields, couplings)[i]
             for j in i + 1:num_qubits
-                A[k][i, j] = -γ[k] * couplings[i, j] * n_ij_pm(k, i, 1) * n_ij_pm(k, j, -1)
-                B[k][i, j] = -γ[k] * couplings[i, j] * n_ij_pm(k, i, 1) * n_ij_pm(k, j,  1)        
+                A[k][i, j] = γ[k] * couplings[i, j] * n_ij_pm(k, i, 1) * n_ij_pm(k, j, -1)
+                B[k][i, j] = γ[k] * couplings[i, j] * n_ij_pm(k, i, 1) * n_ij_pm(k, j,  1)        
             end
         end
 
