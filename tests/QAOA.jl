@@ -1,9 +1,3 @@
-using Test, PyCall, Yao, Zygote
-np = pyimport("numpy")
-nx = pyimport("networkx")
-include("./../src/QAOA.jl")
-
-
 @testset "expectation value for constant beta and gamma" begin
 
     num_qubits = 4

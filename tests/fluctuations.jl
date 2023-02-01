@@ -1,7 +1,3 @@
-using Test, PyCall
-np = pyimport("numpy")
-include("./../src/QAOA.jl")
-
 @testset "SK model easy" begin
     J = np.array([
                   [ 0.        ,  0.42132292, -0.25571582, -0.16267926, -0.77219702,

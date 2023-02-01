@@ -1,7 +1,3 @@
-using Test, PyCall
-np = pyimport("numpy")
-include("./../src/QAOA.jl")
-
 @testset "SK model" begin
 
     # schedule
