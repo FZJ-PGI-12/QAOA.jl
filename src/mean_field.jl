@@ -1,18 +1,27 @@
+"""
+    magnetization(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real})
+"""
 function magnetization(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real})
     h + [sum([J[i, j] * S[j][3] for j in 1:size(S)[1]]) for i in 1:size(S)[1]]
 end
 
-
+"""
+    V_P(alpha::Real)
+"""
 function V_P(alpha::Real) 
     [[cos(alpha), -sin(alpha), 0] [sin(alpha),  cos(alpha), 0] [0,           0,          1]]
 end
 
-
+"""
+    V_D(alpha::Real) 
+"""
 function V_D(alpha::Real) 
     [[1,          0,           0] [0, cos(alpha), -sin(alpha)] [0, sin(alpha),  cos(alpha)]]
 end
 
-
+"""
+    evolve(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+"""
 function evolve(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
     @assert size(β)[1] == size(γ)[1] "Invalid QAOA parameters β and γ!"
 
@@ -26,7 +35,9 @@ function evolve(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real
     S
 end
 
-
+"""
+    evolve(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+"""
 function evolve(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
     @assert size(β)[1] == size(γ)[1] "Invalid QAOA parameters β and γ!"
 
@@ -40,13 +51,17 @@ function evolve(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Mat
     S
 end
 
-
+"""
+    expectation(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real})
+"""
 function expectation(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real})
     S_z = [S[i][3] for i in 1:size(S)[1]]
     ((transpose(h) .+ 0.5 .* transpose(S_z) * J[1:size(S)[1], 1:size(S)[1]]) * S_z)[1]
 end
 
-
+"""
+    mean_field_solution(problem::Problem, β::Vector{<:Real}, γ::Vector{<:Real})
+"""
 function mean_field_solution(problem::Problem, β::Vector{<:Real}, γ::Vector{<:Real})
     @unpack_Problem problem
     
@@ -61,7 +76,9 @@ function mean_field_solution(problem::Problem, β::Vector{<:Real}, γ::Vector{<:
     
 end
 
-
+"""
+    mean_field_solution(S::Vector{<:Vector{<:Real}})
+"""
 function mean_field_solution(S::Vector{<:Vector{<:Real}})
     # solution (rounded S_z values)
     sign.([S[i][3] for i in 1:size(S)[1]])    

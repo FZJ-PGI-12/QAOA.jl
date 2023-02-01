@@ -32,6 +32,18 @@ optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}, algorithm
 optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}; niter::Int=128, learning_rate::Float64 = 0.05)
 ```
 
+### Mean-Field Approximate Optimization Algorithm 
+
+```@docs
+evolve(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+evolve(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+expectation(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real})
+mean_field_solution(problem::Problem, β::Vector{<:Real}, γ::Vector{<:Real})
+mean_field_solution(S::Vector{<:Vector{<:Real}})
+```
+
+### Fluctuation Analysis
+
 
 ### Predefined Optimization Problems
 
