@@ -17,7 +17,6 @@ include("./../src/QAOA.jl")
 
     # SK model
     np.random.seed(11)
-    # J = -np.random.normal(0, 1, size=(N, N)) / np.sqrt(N)
     J = np.random.normal(0, 1, size=(N, N)) / np.sqrt(N)
     J = np.triu(J, k=1)
     J = J + transpose(J)
