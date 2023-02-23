@@ -44,6 +44,9 @@ mean_field_solution(S::Vector{<:Vector{<:Real}})
 
 ### Fluctuation Analysis
 
+```@docs
+evolve_fluctuations(problem::Problem, τ::Real, β::Vector{<:Real}, γ::Vector{<:Real})
+```
 
 ### Predefined Optimization Problems
 
