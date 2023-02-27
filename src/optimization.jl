@@ -19,7 +19,7 @@ Returns the circuit with the all parameters in the proper places.
 ### Notes
 - The number of driver parameters is the number of parameters in the circuit divided by the number of layers, minus the number of problem parameters.
 """
-function dispatch_parameters(circ, problem::Problem, beta_and_gamma)
+function dispatch_parameters!(circ, problem::Problem, beta_and_gamma)
     @unpack_Problem problem
 
     num_driver_parameters = (nparameters(circ) ÷ num_layers) - (num_qubits + num_qubits * (num_qubits - 1) ÷ 2)

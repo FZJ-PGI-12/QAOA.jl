@@ -50,7 +50,7 @@ end
 
     `S = [[1., 0., 0.] for _ in 1:num_qubits]`.
 """
-function evolve(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+function evolve!(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
     @assert size(β)[1] == size(γ)[1] "Invalid QAOA parameters β and γ!"
 
     for k in 1:size(β)[1]
@@ -82,7 +82,7 @@ end
 
     `S = [[[1., 0., 0.] for _ in 1:num_qubits] for _ in 1:num_layers+1]`.
 """
-function evolve(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+function evolve!(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
     @assert size(β)[1] == size(γ)[1] "Invalid QAOA parameters β and γ!"
 
     for k in 1:size(β)[1]
