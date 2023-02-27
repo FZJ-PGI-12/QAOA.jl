@@ -1,6 +1,3 @@
-np = pyimport("numpy")
-nx = pyimport("networkx")
-
 """
     sherrington_kirkpatrick(variance::Float64; seed::Float64=1.0, num_layers::Int=1, driver=X)
 
@@ -27,10 +24,12 @@ where the couplings ``J_{ij}`` are i.i.d. standard Gaussian variables,
 i.e. with zero mean ``\\langle J_{ij} \\rangle = 0`` and variance `` \\langle J_{ij}^2 \\rangle = J^2``.
 """
 function sherrington_kirkpatrick(N::Int, variance::Float64; seed::Int=1, num_layers::Int=1, driver=X)
-    np.random.seed(seed)
-    J = np.random.normal(0, variance, size=(N, N)) ./ sqrt(N)
-    J = np.triu(J, k=1)
+    Random.seed!(seed)
+    J = rand(Distributions.Normal(0, variance), N, N) ./ sqrt(N) 
+    J[diagind(J)] .= 0.0
+    J = UpperTriangular(J)
     J = J + transpose(J)
+
     QAOA.Problem(num_layers, zeros(N), J)
 end
 
@@ -61,8 +60,8 @@ The cost function in Ising form can be defined as
 with ``J_{ij}=-2a_i a_j``. The goal is then to _maximize_ ``\\hat C``.
 """
 function partition_problem(a::Vector{Float64}; num_layers::Int=1, driver=X)
-    J = -2 * np.outer(a |> transpose, a)
-    np.fill_diagonal(J, 0.)  
+    J = -2 .* (a * transpose(a))
+    J[diagind(J)] .= 0.0    
     Problem(num_layers, zeros(size(a)[1]), J, driver)
 end
 
@@ -89,14 +88,11 @@ The cost function for the MaxCut problem as defined in the [original QAOA paper]
     
 where ``E(G)`` is the set of edges of the graph ``G``.
 """
-function max_cut(graph::PyObject; num_layers::Int=1, driver=X)
-    @assert pybuiltin(:isinstance)(graph, (nx.Graph)) "Input must be a Python NetworkX graph."
-
-    N = graph.number_of_nodes()
-    h = zeros(N)
-    J = zeros(N, N)
-    for edge in graph.edges
-        J[(edge .+ (1, 1))...] = -1/2.
+function max_cut(num_nodes::Int, edges::Vector{Tuple{Int, Int}}; num_layers::Int=1, driver=X)
+    h = zeros(num_nodes)
+    J = zeros(num_nodes, num_nodes)
+    for edge in edges
+        J[edge...] = -1/2.
     end
     
     Problem(num_layers, h, J, driver)
@@ -125,19 +121,16 @@ The cost function for the minimum-vertex-cover problem is
 
 where ``E(G)`` is the set of edges and ``V(G)`` is the set of vertices of `graph` (we have a global minus sign since we _maximize_ the cost function).
 """
-function min_vertex_cover(graph::PyObject; num_layers::Int=1, driver=X)
-    @assert pybuiltin(:isinstance)(graph, (nx.Graph)) "Input must be a Python NetworkX graph."
-
-    N = graph.number_of_nodes()
-    h = -ones(N)
-    J = zeros(N, N)
+function min_vertex_cover(num_nodes::Int, edges::Vector{Tuple{Int, Int}}; num_layers::Int=1, driver=X)
+    h = -ones(num_nodes)
+    J = zeros(num_nodes, num_nodes)
     
-    for edge in graph.edges
-        h[edge[1] + 1] += 3/4.
-        h[edge[2] + 1] += 3/4.
-        J[(edge .+ (1, 1))...] = 3/4.
+    for edge in edges
+        h[edge[1]] += 3/4.
+        h[edge[2]] += 3/4.
+        J[edge...] = 3/4.
     end    
 
-    # note minus signs (necessary when maximizing)
+    # note minus signs (we are maximizing)
     Problem(num_layers, -h, -J, driver)
 end

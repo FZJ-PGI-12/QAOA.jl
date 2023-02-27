@@ -9,26 +9,22 @@ authors:
   - name: Tim Bode
     orcid: 0000-0001-8280-3891
     corresponding: true
-    affiliation: "1, 2"
+    affiliation: 1
   - name: Dmitry Bagrets
-    affiliation: "1, 3"
-  - name: Aditi Misra-Spieldenner
-    affiliation: 4
-  - name: Tobias Stollenwerk
     affiliation: "1, 2"
-  - name: Peter Schuhmacher
-    affiliation: 2
+  - name: Aditi Misra-Spieldenner
+    affiliation: 3
+  - name: Tobias Stollenwerk
+    affiliation: 1
   - name: Frank K. Wilhelm
-    affiliation: "1, 4"    
+    affiliation: "1, 3"    
 affiliations:
  - name: Institute for Quantum Computing Analytics (PGI-12), Forschungszentrum Jülich, 52425 Jülich, Germany
    index: 1
- - name: German Aerospace Center (DLR), Linder Höhe, 51147 Cologne, Germany
-   index: 2
  - name: Institute for Theoretical Physics, University of Cologne, 50937 Cologne, Germany
-   index: 3   
+   index: 2  
  - name: Theoretical Physics, Saarland University, 66123 Saarbrücken, Germany
-   index: 4
+   index: 3
 date: 19 January 2023
 bibliography: paper.bib
 
