@@ -4,7 +4,6 @@ using Yao, YaoBlocks, Zygote
 using LinearAlgebra
 using Parameters
 using NLopt
-# using PyCall
 using DocStringExtensions
 
 import Distributions, Random

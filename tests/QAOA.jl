@@ -3,15 +3,7 @@ using LinearAlgebra
 @testset "expectation value for constant beta and gamma" begin
 
     num_qubits = 4
-    # np.random.seed(1)
-    # a = np.random.rand(num_qubits)
-    # a = np.sort(a)
-
-    # @test a ≈ [0.00011437481734488664, 0.30233257263183977, 0.417022004702574, 0.7203244934421581] rtol=1e-10
     a = [0.00011437481734488664, 0.30233257263183977, 0.417022004702574, 0.7203244934421581]
-
-    # J = -2 * np.outer(a |> transpose, a)
-    # np.fill_diagonal(J, 0.)
 
     J = -2 .* (a * transpose(a))
     J[diagind(J)] .= 0.0    
@@ -40,15 +32,7 @@ end
 @testset "break Z2 symmetry" begin
 
     num_qubits = 4
-    # np.random.seed(1)
-    # a = np.random.rand(num_qubits)
-    # a = np.sort(a)
-
-    # @test a ≈ [0.00011437481734488664, 0.30233257263183977, 0.417022004702574, 0.7203244934421581] rtol=1e-10
     a = [0.00011437481734488664, 0.30233257263183977, 0.417022004702574, 0.7203244934421581]
-
-    # J = -2 * np.outer(a |> transpose, a)
-    # np.fill_diagonal(J, 0.)
 
     J = -2 .* (a * transpose(a))
     J[diagind(J)] .= 0.0        
@@ -74,14 +58,7 @@ end
     rtol = 1e-10
 
     num_qubits = 4
-    # np.random.seed(3)
-    # a = np.random.rand(num_qubits)
-    # a = np.sort(a)
-
     a = [0.2909047389129443, 0.510827605197663, 0.5507979025745755, 0.7081478226181048]
-
-    # J = -2 * np.outer(a |> transpose, a)
-    # np.fill_diagonal(J, 0.)
 
     J = -2 .* (a * transpose(a))
     J[diagind(J)] .= 0.0        
@@ -115,14 +92,7 @@ end
     rtol = 1e-10
 
     num_qubits = 4
-    # np.random.seed(3)
-    # a = np.random.rand(num_qubits)
-    # a = np.sort(a)
-
     a = [0.2909047389129443, 0.510827605197663, 0.5507979025745755, 0.7081478226181048]
-
-    # J = -2 * np.outer(a |> transpose, a)
-    # np.fill_diagonal(J, 0.)
 
     J = -2 .* (a * transpose(a))
     J[diagind(J)] .= 0.0        
