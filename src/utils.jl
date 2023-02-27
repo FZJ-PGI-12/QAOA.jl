@@ -67,7 +67,7 @@ end
 
 
 """
-    max_cut(graph::PyObject; num_layers::Int=1, driver=X)
+    max_cut(num_nodes::Int, edges::Vector{Tuple{Int, Int}}; num_layers::Int=1, driver=X)
 
 Wrapper function setting up an instance of the MaxCut problem for the graph `graph`.
 
@@ -100,7 +100,7 @@ end
 
 
 """
-    min_vertex_cover(graph::PyObject; num_layers::Int=1, driver=X)
+    min_vertex_cover(num_nodes::Int, edges::Vector{Tuple{Int, Int}}; num_layers::Int=1, driver=X)
 
 Wrapper function setting up a problem instance for the minimum vertex cover of the graph `graph`.
 
