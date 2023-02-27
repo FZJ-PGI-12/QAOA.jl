@@ -1,7 +1,4 @@
-using Test, PyCall, Yao, Zygote
-np = pyimport("numpy")
-nx = pyimport("networkx")
-include("./../src/QAOA.jl")
+using Test, QAOA, PyCall, Yao, Zygote, LinearAlgebra
 
 @testset verbose=true "QAOA.jl" begin
 

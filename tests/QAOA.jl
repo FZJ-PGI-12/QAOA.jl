@@ -1,5 +1,3 @@
-using LinearAlgebra
-
 @testset "expectation value for constant beta and gamma" begin
 
     num_qubits = 4
@@ -128,14 +126,14 @@ end
     num_qubits = 2
 
     h_z = zeros(num_qubits)
-    J = np.array([[0, 1], [1, 0]]) # C = Z_1 * Z_2
+    J = [0 1; 1 0] # C = Z_1 * Z_2
 
     p = 1
     problem = QAOA.Problem(p, h_z, J)
 
-    beta_vals = np.linspace(0, pi, 11)
-    gamma_vals = np.linspace(0, pi, 11)
-    X, Y = np.meshgrid(beta_vals, gamma_vals)
+    vals = LinRange(0, pi, 11)
+    X = vals' .* ones(11)
+    Y = ones(11)' .* vals
 
     analytic_cost = x -> sin(4x[1])sin(2x[2])
 
