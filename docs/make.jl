@@ -1,4 +1,4 @@
-using Documenter, QAOA, PyCall
+using Documenter, QAOA
 
 makedocs(
     sitename="QAOA.jl",

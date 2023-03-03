@@ -70,7 +70,7 @@ where ``N`` is `num_qubits`, ``h_i`` are the `local_fields` and ``J_{ij}`` are t
 """    
 function cost_function(problem::Problem, beta_and_gamma::Vector{Float64})::Real
     circ = circuit(problem)
-    circ = dispatch_parameters(circ, problem, beta_and_gamma)
+    circ = dispatch_parameters!(circ, problem, beta_and_gamma)
     reg = apply(uniform_state(nqubits(circ)), circ)
     expect(QAOA.problem_hamiltonian(problem), reg) |> real
 end
@@ -114,7 +114,7 @@ function optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}, 
     cost, params, info = optimize(opt, beta_and_gamma)
 
     circ = circuit(problem)
-    circ = dispatch_parameters(circ, problem, params)
+    circ = dispatch_parameters!(circ, problem, params)
     probabilities = uniform_state(nqubits(circ)) |> circ |> probs
     cost, params, probabilities
 end
@@ -162,7 +162,7 @@ function optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}; 
     end
 
     circ = circuit(problem)
-    circ = dispatch_parameters(circ, problem, params)
+    circ = dispatch_parameters!(circ, problem, params)
     probabilities = uniform_state(nqubits(circ)) |> circ |> probs
     cost, params, probabilities
 end
