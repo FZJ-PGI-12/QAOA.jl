@@ -1,6 +1,6 @@
 # Welcome!
 
-`QAOA.jl` is a lightweight implementation of the [Quantum Approximate Optimization Algorithm (QAOA)](https://arxiv.org/abs/1411.4028) based on [`Yao.jl`](https://github.com/QuantumBFS/Yao.jl).
+`QAOA.jl` is a lightweight implementation of the [Quantum Approximate Optimization Algorithm (QAOA)](https://arxiv.org/abs/1411.4028) based on [`Yao.jl`](https://github.com/QuantumBFS/Yao.jl). Furthermore, it implements the [mean-field Approximate Optimization Algorithm](https://arxiv.org/abs/2303.00329), which is a useful tool to simulate quantum annealing and the QAOA in the mean-field approximation.
 
 ## Installation
 

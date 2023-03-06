@@ -7,7 +7,9 @@ makedocs(
                 "Examples" => ["examples/sherrington_kirkpatrick.md",
                                "examples/partition_problem.md",
                                "examples/max_cut.md",
-                               "examples/min_vertex_cover.md"]
+                               "examples/min_vertex_cover.md",
+                               "examples/mean_field.md"],
+                "Citation" => "citation.md"
 
             ]
     )
