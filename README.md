@@ -1,22 +1,20 @@
 # QAOA.jl
 
-This code base is using the Julia Language and [DrWatson](https://juliadynamics.github.io/DrWatson.jl/stable/)
-to make a reproducible scientific project named
-> QAOA.jl
+This package implements the [Quantum Approximate Optimization Algorithm](https://arxiv.org/abs/1411.4028) and the [Mean-Field Approximate Optimization Algorithm](https://arxiv.org/abs/2303.00329).
 
-It is authored by Tim Bode.
 
-To (locally) reproduce this project, do the following:
+## Citations
 
-0. Download this code base. Notice that raw data are typically not included in the
-   git-history and may need to be downloaded independently.
-1. Open a Julia console and do:
-   ```
-   julia> using Pkg
-   julia> Pkg.add("DrWatson") # install globally, for using `quickactivate`
-   julia> Pkg.activate("path/to/this/project")
-   julia> Pkg.instantiate()
-   ```
-
-This will install all necessary packages for you to be able to run the scripts and
-everything should work out of the box, including correctly finding local paths.
+If you are using code from this repository, please cite our work:
+```
+@misc{https://doi.org/10.48550/arxiv.2303.00329,
+  doi = {10.48550/ARXIV.2303.00329},
+  url = {https://arxiv.org/abs/2303.00329},
+  author = {Misra-Spieldenner, Aditi and Bode, Tim and Schuhmacher, Peter K. and Stollenwerk, Tobias and Bagrets, Dmitry and Wilhelm, Frank K.},
+  keywords = {Quantum Physics (quant-ph), Disordered Systems and Neural Networks (cond-mat.dis-nn), FOS: Physical sciences, FOS: Physical sciences},
+  title = {Mean-Field Approximate Optimization Algorithm},
+  publisher = {arXiv},
+  year = {2023},
+  copyright = {arXiv.org perpetual, non-exclusive license}
+}
+```
