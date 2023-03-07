@@ -6,7 +6,7 @@ Returns the problem parameters in the proper order, such that they can be `dispa
 ### Notes
 - The macro `Zygote.@nograd` is necessary because `Zygote` does not support automatic differentiation through mutating code.
 """
-Zygote.@nograd function problem_parameters(local_fields::Vector{Real}, couplings::Matrix{Real})::Vector{Real}
+function problem_parameters(local_fields::Vector{Real}, couplings::Matrix{Real})::Vector{Real}
     num_qubits = size(local_fields)[1]
     vcat(2 .* local_fields, [2 * couplings[i, j] for j in 1:num_qubits for i in 1:j-1])
 end
@@ -24,7 +24,7 @@ function dispatch_parameters!(circ, problem::Problem, beta_and_gamma)
 
     num_driver_parameters = (nparameters(circ) ÷ num_layers) - (num_qubits + num_qubits * (num_qubits - 1) ÷ 2)
 
-    concat_params = l -> vcat(beta_and_gamma[l + num_layers] .* problem_parameters(local_fields, couplings),
+    concat_params = l -> vcat(beta_and_gamma[l + num_layers] .* ChainRulesCore.@ignore_derivatives(problem_parameters(local_fields, couplings)),
                               beta_and_gamma[l] .* 2. .* ones(num_driver_parameters))
 
     all_params = map(concat_params, 1:num_layers)
@@ -40,7 +40,7 @@ Returns the problem Hamiltonian corresponding to `problem`.
 ### Notes
 - The macro `Zygote.@nograd` is necessary because `Zygote` does not support automatic differentiation through mutating code.
 """
-Zygote.@nograd function problem_hamiltonian(problem::Problem)
+function problem_hamiltonian(problem::Problem)
     H =  sum([problem.local_fields[i] * put(i => Z)(problem.num_qubits) for i in 1:problem.num_qubits])
     H += sum([problem.couplings[i, j] * put((i, j) => kron(Z, Z))(problem.num_qubits) for j in 1:problem.num_qubits for i in 1:j-1])
     H
@@ -69,10 +69,10 @@ This function computes
 where ``N`` is `num_qubits`, ``h_i`` are the `local_fields` and ``J_{ij}`` are the `couplings` from `problem`.
 """    
 function cost_function(problem::Problem, beta_and_gamma::Vector{Float64})::Real
-    circ = circuit(problem)
+    circ = ChainRulesCore.@ignore_derivatives(circuit(problem))
     circ = dispatch_parameters!(circ, problem, beta_and_gamma)
     reg = apply(uniform_state(nqubits(circ)), circ)
-    expect(QAOA.problem_hamiltonian(problem), reg) |> real
+    expect(ChainRulesCore.@ignore_derivatives(QAOA.problem_hamiltonian(problem)), reg) |> real
 end
 
 """

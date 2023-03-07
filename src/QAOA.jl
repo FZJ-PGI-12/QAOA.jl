@@ -1,6 +1,6 @@
 module QAOA
 
-using Yao, YaoBlocks, Zygote
+using Yao, YaoBlocks, Zygote, ChainRulesCore
 using LinearAlgebra
 using Parameters
 using NLopt

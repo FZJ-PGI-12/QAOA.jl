@@ -113,6 +113,6 @@ end
 
 Returns the `Yao` circuit for the given QAOA problem. 
 """    
-Zygote.@nograd function circuit(problem::Problem)
+function circuit(problem::Problem)
     [layer(problem) for _ in 1:problem.num_layers] |> chain
 end
