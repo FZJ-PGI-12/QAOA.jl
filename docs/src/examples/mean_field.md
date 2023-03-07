@@ -4,7 +4,7 @@
     For more details on the mean-field Approximate Optimization Algorithm, please consult [our paper](https://arxiv.org/abs/2303.00329).
 
 !!! note
-    A [Jupyter notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/mean_field.ipynb) related to this example is available in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks). For a comparison between the QAOA and the mean-field AOA, have a look into our [Sherrington-Kirkpatrick example](@ref SKModel).
+    A [Jupyter notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/mean_field.ipynb) related to this example is available in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks). For a comparison between the QAOA and the mean-field AOA, have a look into our [MaxCut example](@ref MaxCut).
 
 
 In close analogy to the QAOA, the mean-field Hamiltonian reads
@@ -19,14 +19,14 @@ The mean-field evolution is then given by
     \boldsymbol{n}_i(p) = \prod_{k=1}^p \hat V_i^D(k) \hat V_i^P(k) \boldsymbol{n}_i(0),
 \end{align}
 ```
-where the initial spin vectors are ``\boldsymbol{n}_i(0) = (1, 0, 0)^T \; \forall i``, and the rotation matrices ``V_i^{D,\,P}`` are defined as
+where the initial spin vectors are ``\boldsymbol{n}_i(0) = (1, 0, 0)^T \; \forall i``, and the rotation matrices ``\hat V_i^{D,\,P}`` are defined as
 ```math
 \begin{align}
 \hat V_i^D(k) = 
 \begin{pmatrix}
 1 & 0 & 0 \\
-0 & \phantom{-}\cos(2 \Delta_i\beta_k) & \sin(2 \Delta_i \beta_k) \\
-0 & -\sin (2 \Delta_i \beta_k) & \cos(2 \Delta_i \beta_k) 
+0 & \cos(2 \Delta_i\beta_k) & -\sin(2 \Delta_i \beta_k) \\
+0 & \sin (2 \Delta_i \beta_k) & \phantom{-}\cos(2 \Delta_i \beta_k) 
 \end{pmatrix}
 \end{align}
 ```
@@ -35,8 +35,8 @@ and
 \begin{align}
 \hat V_i^P(k) = 
 \begin{pmatrix}
-\phantom{-}\cos(2m_i (t_{k-1}) \gamma_k) & \sin(2m_i (t_{k-1}) \gamma_k) & 0 \\
--\sin (2m_i (t_{k-1}) \gamma_k) & \cos(2m_i (t_{k-1}) \gamma_k) & 0 \\
+\cos(2m_i (t_{k-1}) \gamma_k) & -\sin(2m_i (t_{k-1}) \gamma_k) & 0 \\
+\sin (2m_i (t_{k-1}) \gamma_k) & \phantom{-}\cos(2m_i (t_{k-1}) \gamma_k) & 0 \\
 0 & 0 & 1
 \end{pmatrix},
 \end{align}
