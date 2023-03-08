@@ -14,7 +14,7 @@ makedocs(
             ]
     )
 
-# deploydocs(
-#     repo = "github.com/FZJ-PGI-12/QAOA.jl.git",
-# )
+deploydocs(
+    repo = "github.com/FZJ-PGI-12/QAOA.jl.git",
+)
 
