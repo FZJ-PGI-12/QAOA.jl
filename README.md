@@ -1,5 +1,8 @@
 # QAOA.jl
 
+[![CI](https://github.com/FZJ-PGI-12/QAOA.jl/workflows/CI/badge.svg)](https://github.com/FZJ-PGI-12/QAOA.jl/actions?query=workflow%3ACI)
+
+
 This package implements the [Quantum Approximate Optimization Algorithm](https://arxiv.org/abs/1411.4028) and the [Mean-Field Approximate Optimization Algorithm](https://arxiv.org/abs/2303.00329).
 
 
