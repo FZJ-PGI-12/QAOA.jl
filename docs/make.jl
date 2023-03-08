@@ -15,6 +15,6 @@ makedocs(
     )
 
 # deploydocs(
-#     repo = "github.com/NonequilibriumDynamics/KadanoffBaym.jl.git",
+#     repo = "github.com/FZJ-PGI-12/QAOA.jl.git",
 # )
 
