@@ -1,4 +1,4 @@
-using Test, QAOA, PyCall, Yao, Zygote, LinearAlgebra
+using Test, QAOA, Yao, Zygote, LinearAlgebra
 
 @testset verbose=true "QAOA.jl" begin
 
