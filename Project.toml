@@ -1,6 +1,6 @@
 name = "QAOA"
 uuid = "814bfb56-6688-4460-8fd4-bc1ff2cd6cd4"
-authors = ["Tim Bode"]
+authors = ["Tim Bode, "Dmitry Bagrets", "Aditi Misra-Spieldenner", "Tobias Stollenwerk", "Frank K. Wilhelm"]
 version = "1.0.0"
 
 [deps]
