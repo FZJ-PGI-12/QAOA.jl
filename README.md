@@ -15,7 +15,7 @@ julia> ] add QAOA
 
 ## Documentation
 
-Our docs can be found [here](https://fzj-pgi-12.github.io/QAOA.jl/dev/). Examples showcasing the use of `QAOA.jl` are also presented in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks)/
+Our docs can be found [here](https://fzj-pgi-12.github.io/QAOA.jl/dev/). Examples showcasing the use of `QAOA.jl` are also presented in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks).
 
 
 ## Citations
