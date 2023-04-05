@@ -13,9 +13,15 @@ To install, use Julia's built-in package manager
 julia> ] add QAOA
 ```
 
-## Documentation
+## Documentation & Examples
 
 Our docs can be found [here](https://fzj-pgi-12.github.io/QAOA.jl/dev/). Examples showcasing the use of `QAOA.jl` are also presented in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks).
+
+## Benchmarks
+
+`QAOA.jl` also supports gradient optimization via automatic differentiation. Below is a comparison of run times between `PennyLane` [@PennyLane] and `QAOA.jl` on an Apple M1 processor. The benchmarks are retrieved by performing 128 steps with the respective gradient optimizer on the same instance of size $N$ of the minimum vertex-cover problem.
+
+<img src="https://raw.githubusercontent.com/FZJ-PGI-12/QAOA.jl/master/assets/benchmarks.png" align="middle"/>
 
 
 ## Citations
