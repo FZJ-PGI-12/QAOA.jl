@@ -15,6 +15,9 @@ julia> ] add QAOA
 
 ### Index
 
+!!! note
+    Below is a list of the functions exported by `QAOA.jl`. Please note that we are taking advantage of [multiple dispatch](https://en.wikipedia.org/wiki/Multiple_dispatch) as implemented in `Julia`, i.e. some functions are defined multiple times with different signatures.
+
 ```@index
 ```
 

@@ -9,7 +9,8 @@ makedocs(
                                "examples/max_cut.md",
                                "examples/min_vertex_cover.md",
                                "examples/mean_field.md"],
-                "Citation" => "citation.md"
+                "Citation" => "citation.md",
+                "Support and Contributing" => "support.md"
 
             ]
     )
