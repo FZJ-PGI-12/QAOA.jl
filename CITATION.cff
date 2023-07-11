@@ -1,0 +1,48 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Bode
+  given-names: Tim
+  orcid: "https://orcid.org/0000-0001-8280-3891"
+- family-names: Bagrets
+  given-names: Dmitry
+- family-names: Misra-Spieldenner
+  given-names: Aditi
+- family-names: Stollenwerk
+  given-names: Tobias
+- family-names: Wilhelm
+  given-names: Frank K.
+contact:
+- family-names: Bode
+  given-names: Tim
+  orcid: "https://orcid.org/0000-0001-8280-3891"
+doi: 10.5281/zenodo.8086187
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Bode
+    given-names: Tim
+    orcid: "https://orcid.org/0000-0001-8280-3891"
+  - family-names: Bagrets
+    given-names: Dmitry
+  - family-names: Misra-Spieldenner
+    given-names: Aditi
+  - family-names: Stollenwerk
+    given-names: Tobias
+  - family-names: Wilhelm
+    given-names: Frank K.
+  date-published: 2023-06-28
+  doi: 10.21105/joss.05364
+  issn: 2475-9066
+  issue: 86
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 5364
+  title: "QAOA.jl: Toolkit for the Quantum and Mean-Field Approximate
+    Optimization Algorithms"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.05364"
+  volume: 8
+title: "QAOA.jl: Toolkit for the Quantum and Mean-Field Approximate
+  Optimization Algorithms"
