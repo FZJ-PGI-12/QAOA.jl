@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/FZJ-PGI-12/QAOA.jl/workflows/CI/badge.svg)](https://github.com/FZJ-PGI-12/QAOA.jl/actions?query=workflow%3ACI)
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://fzj-pgi-12.github.io/QAOA.jl/dev/)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.05364/status.svg)](https://doi.org/10.21105/joss.05364)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8086188.svg)](https://doi.org/10.5281/zenodo.8086188)
 
 This package implements the [Quantum Approximate Optimization Algorithm](https://arxiv.org/abs/1411.4028) and the [Mean-Field Approximate Optimization Algorithm](https://arxiv.org/abs/2303.00329).
 
@@ -31,7 +33,7 @@ In case you need support or have encountered a problem with the package, you are
 
 ## Citations
 
-If you are using code from this repository, please cite our work:
+If you are using code from this repository, please [cite our work](https://doi.org/10.21105/joss.05364). Also consider our algorithmic paper:
 ```
 @misc{https://doi.org/10.48550/arxiv.2303.00329,
   doi = {10.48550/ARXIV.2303.00329},
