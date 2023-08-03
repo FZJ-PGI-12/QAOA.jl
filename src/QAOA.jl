@@ -25,4 +25,7 @@ export evolve!, expectation, mean_field_solution
 include("fluctuations.jl")
 export evolve_fluctuations
 
+include("annealing.jl")
+export anneal
+
 end

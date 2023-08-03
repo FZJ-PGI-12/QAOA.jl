@@ -59,3 +59,9 @@ partition_problem(a::Vector{Float64}; num_layers::Int=1, driver=X)
 max_cut(num_nodes::Int, edges::Vector{Tuple{Int, Int}}; num_layers::Int=1, driver=X)
 min_vertex_cover(num_nodes::Int, edges::Vector{Tuple{Int, Int}}; num_layers::Int=1, driver=X)
 ```
+
+### Annealing
+
+```@docs
+anneal(problem::Problem, schedule::Function, T_anneal::Float64)
+```
