@@ -62,16 +62,10 @@ function evolve_fluctuations(problem::Problem, τ::Real, β::Vector{<:Real}, γ:
     M = 1.0I(2num_qubits)
     for k in 1:size(γ)[1]
         L = fluctuation_matrix(problem, S[k], solutions, β[k], γ[k])        
-        omega_eig, omega_eigvec = eigen(L)
-        
-        M = omega_eigvec * diagm(exp.(-1im .* τ .* omega_eig)) * inv(omega_eigvec) * M
+        M = exp(-1im .* τ .* L) * M
 
         lyapunov_exponential_eig = eigvals(M * transpose(conj.(M)))
-
-        lyapunov_exponent_eig = log.((1.0 + 0.0im) * lyapunov_exponential_eig) ./ 2 .|> real
-        lyapunov_exponent_eig = sort(lyapunov_exponent_eig)
-
-        lyapunov_exponent[k] = lyapunov_exponent_eig        
+        lyapunov_exponent[k] = log.((1.0 + 0.0im) * lyapunov_exponential_eig) ./ 2 .|> real |> sort        
     end
 
     lyapunov_exponent
