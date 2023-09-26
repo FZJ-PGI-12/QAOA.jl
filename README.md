@@ -35,14 +35,18 @@ In case you need support or have encountered a problem with the package, you are
 
 If you are using code from this repository, please [cite our work](https://doi.org/10.21105/joss.05364). Also consider our algorithmic paper:
 ```
-@misc{https://doi.org/10.48550/arxiv.2303.00329,
-  doi = {10.48550/ARXIV.2303.00329},
-  url = {https://arxiv.org/abs/2303.00329},
-  author = {Misra-Spieldenner, Aditi and Bode, Tim and Schuhmacher, Peter K. and Stollenwerk, Tobias and Bagrets, Dmitry and Wilhelm, Frank K.},
-  keywords = {Quantum Physics (quant-ph), Disordered Systems and Neural Networks (cond-mat.dis-nn), FOS: Physical sciences, FOS: Physical sciences},
+@article{PRXQuantum.4.030335,
   title = {Mean-Field Approximate Optimization Algorithm},
-  publisher = {arXiv},
+  author = {Misra-Spieldenner, Aditi and Bode, Tim and Schuhmacher, Peter K. and Stollenwerk, Tobias and Bagrets, Dmitry and Wilhelm, Frank K.},
+  journal = {PRX Quantum},
+  volume = {4},
+  issue = {3},
+  pages = {030335},
+  numpages = {19},
   year = {2023},
-  copyright = {arXiv.org perpetual, non-exclusive license}
+  month = {Sep},
+  publisher = {American Physical Society},
+  doi = {10.1103/PRXQuantum.4.030335},
+  url = {https://link.aps.org/doi/10.1103/PRXQuantum.4.030335}
 }
 ```
