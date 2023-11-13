@@ -4,7 +4,7 @@
     For more details on the mean-field Approximate Optimization Algorithm, please consult [our paper](https://doi.org/10.1103/PRXQuantum.4.030335).
 
 !!! note
-    A [Jupyter notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/mean_field.ipynb) related to this example is available in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks). For a comparison between the QAOA and the mean-field AOA, have a look into our [MaxCut example](@ref MaxCut).
+    A [Jupyter notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/mean_field.ipynb) related to this example is available in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks). For a comparison between the QAOA and the mean-field AOA, have a look into our [SK](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/sherrington_kirkpatrick.ipynb) and [MaxCut](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/max_cut.ipynb) notebooks.
 
 
 In close analogy to the QAOA, the mean-field Hamiltonian reads
