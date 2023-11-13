@@ -5,6 +5,7 @@ makedocs(
     pages = [
                 "Overview" => "index.md",
                 "Examples" => ["examples/mean_field.md",
+                               "examples/prime_number.md",
                                "QAOA" => ["examples/QAOA/sherrington_kirkpatrick.md",
                                "examples/QAOA/partition_problem.md",
                                "examples/QAOA/max_cut.md",
