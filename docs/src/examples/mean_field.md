@@ -1,7 +1,7 @@
 # [Mean-Field Approximate Optimization Algorithm] (@id MFAOA)
 
 !!! tip
-    For more details on the mean-field Approximate Optimization Algorithm, please consult [our paper](https://arxiv.org/abs/2303.00329).
+    For more details on the mean-field Approximate Optimization Algorithm, please consult [our paper](https://doi.org/10.1103/PRXQuantum.4.030335).
 
 !!! note
     A [Jupyter notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/mean_field.ipynb) related to this example is available in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks). For a comparison between the QAOA and the mean-field AOA, have a look into our [MaxCut example](@ref MaxCut).
@@ -88,9 +88,9 @@ S = evolve!(S, mf_problem.local_fields, mf_problem.couplings, β, γ)
 ```
 The energy expectation value in mean-field approximation is 
 ```julia
-E = expectation(S[end], mf_problem.local_fields, mf_problem.couplings)
+E = expectation(S, mf_problem.local_fields, mf_problem.couplings)
 ```
 and the solution of the algorithm can be retrieved by calling
 ```julia
-sol = mean_field_solution(S[end])
+sol = mean_field_solution(S)
 ```
