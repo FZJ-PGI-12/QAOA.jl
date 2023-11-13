@@ -8,7 +8,8 @@ makedocs(
                                "QAOA" => ["examples/QAOA/sherrington_kirkpatrick.md",
                                "examples/QAOA/partition_problem.md",
                                "examples/QAOA/max_cut.md",
-                               "examples/QAOA/min_vertex_cover.md"]],
+                               "examples/QAOA/min_vertex_cover.md"],
+                               "examples/annealing.md"],
                 "Citation" => "citation.md",
                 "Support and Contributing" => "support.md"
 
