@@ -29,7 +29,7 @@ function anneal(problem::Problem, schedule::Function, T::Float64)
     τ = T/(num_layers - 1)  
     γ = map(schedule, τ .* (0:num_layers-1))
     β = 1 .- γ
-    beta_and_gamma = vcat(β, γ)
+    beta_and_gamma = τ .* vcat(β, γ)
     circ = circuit(problem)
     circ = dispatch_parameters!(circ, problem, beta_and_gamma)
     probabilities = uniform_state(nqubits(circ)) |> circ |> probs
