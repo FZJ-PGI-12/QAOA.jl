@@ -1,7 +1,7 @@
 name = "QAOA"
 uuid = "814bfb56-6688-4460-8fd4-bc1ff2cd6cd4"
 authors = ["Tim Bode, Dmitry Bagrets, Aditi Misra-Spieldenner, Tobias Stollenwerk, Frank K. Wilhelm"]
-version = "1.1.1"
+version = "1.2.0"
 
 [deps]
 ChainRules = "082447d4-558c-5d27-93f4-14fc19e9eca2"
