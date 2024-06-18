@@ -128,18 +128,9 @@ Evolves the mean-field equations of motion for a given system.
 - `sol`: Solution object from the ODE solver containing the time evolution of the system.
 
 # Notes
-This function solves the mean-field equations of motion for a system described by an external magnetic field `h` and an interaction matrix `J` over a time interval from `0.0` to `T_final`. The evolution is controlled by a scheduling function `schedule(t)` which interpolates between different dynamical regimes.
-
-The mean-field equations are defined as:
-
-    ``
-    dS/dt = f(S, t)
-    ``
-where `S` is the state vector and `f(S, t)` is derived from the Hamiltonian of the system.
-
-The initial state `S₀` is assumed to be the vector `[1.0, 0.0, 0.0]` for each spin.
-
-The function uses the `Tsit5()` solver from the `DifferentialEquations.jl` package to solve the ODE.
+- This function solves the mean-field equations of motion for a system described by an external magnetic field `h` and an interaction matrix `J` over a time interval from `0.0` to `T_final`. The evolution is controlled by a scheduling function `schedule(t)` which interpolates between different dynamical regimes.
+- The initial state `S₀` is assumed to be the vector `[1.0, 0.0, 0.0]` for each spin.
+- The function uses the `Tsit5()` solver from the `DifferentialEquations.jl` package to solve the ODE.
 
 # Example
 ```julia
