@@ -1,3 +1,4 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 QAOA = "814bfb56-6688-4460-8fd4-bc1ff2cd6cd4"
+Yao = "5872b779-8223-5990-8dd0-5abbb0748c8c"
