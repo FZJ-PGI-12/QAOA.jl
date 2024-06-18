@@ -32,7 +32,7 @@ function V_D(alpha::Real)
 end
 
 """
-    evolve!(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+    evolve(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
 
 ### Input
 - `S::Vector{<:Vector{<:Real}}`: The initial vector of all spin vectors.
@@ -50,7 +50,7 @@ end
 
     `S = [[1., 0., 0.] for _ in 1:num_qubits]`.
 """
-function evolve!(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+function evolve(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
     @assert size(β)[1] == size(γ)[1] "Invalid QAOA parameters β and γ!"
 
     for k in 1:size(β)[1]
@@ -64,7 +64,7 @@ function evolve!(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Rea
 end
 
 """
-    evolve!(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+    evolve(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
 
 ### Input
 - `S::Vector{<:Vector{<:Vector{<:Real}}}`: An empty history of the vector of all spin vectors.
@@ -82,7 +82,7 @@ end
 
     `S = [[[1., 0., 0.] for _ in 1:num_qubits] for _ in 1:num_layers+1]`.
 """
-function evolve!(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+function evolve(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
     @assert size(β)[1] == size(γ)[1] "Invalid QAOA parameters β and γ!"
 
     for k in 1:size(β)[1]
@@ -145,7 +145,7 @@ function mean_field_solution(problem::Problem, β::Vector{<:Real}, γ::Vector{<:
 
     # evolution
     S = [[1., 0., 0.] for _ in 1:num_qubits]
-    S = QAOA.evolve!(S, local_fields, couplings, β, γ)
+    S = QAOA.evolve(S, local_fields, couplings, β, γ)
 
     # solution (rounded S_z values)
     sign.([S[i][3] for i in 1:size(S)[1]]) 

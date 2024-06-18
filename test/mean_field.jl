@@ -22,7 +22,7 @@
     mf_problem = QAOA.Problem(p, J)
 
     # evolution
-    S = QAOA.evolve!(S, mf_problem.local_fields, mf_problem.couplings, β, γ)
+    S = QAOA.evolve(S, mf_problem.local_fields, mf_problem.couplings, β, γ)
     
     # solution
     S_test = [[-0.4280189887648497,  -0.57845514021309,     0.6943985858408479],

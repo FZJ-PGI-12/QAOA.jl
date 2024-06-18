@@ -17,7 +17,7 @@
     problem = QAOA.Problem(p, h_z, J)
     circ = QAOA.circuit(problem)
 
-    circ = QAOA.dispatch_parameters!(circ, problem, beta_and_gamma)
+    circ = QAOA.dispatch_parameters(circ, problem, beta_and_gamma)
 
     reg = uniform_state(num_qubits) |> circ
     loss = (expect(QAOA.problem_hamiltonian(problem), reg) |> real) - sum(a.^2)
@@ -41,7 +41,7 @@ end
     problem = QAOA.Problem(p, J)
     circ = QAOA.circuit(problem)
 
-    circ = QAOA.dispatch_parameters!(circ, problem, beta_and_gamma)
+    circ = QAOA.dispatch_parameters(circ, problem, beta_and_gamma)
 
     reg = uniform_state(nqubits(circ)) |> circ
     loss = (expect(QAOA.problem_hamiltonian(problem), reg) |> real) - sum(a.^2)
@@ -76,7 +76,7 @@ end
     problem = QAOA.Problem(p, h_z, J)
     circ = QAOA.circuit(problem)
 
-    circ = QAOA.dispatch_parameters!(circ, problem, vcat(beta, gamma))
+    circ = QAOA.dispatch_parameters(circ, problem, vcat(beta, gamma))
 
     reg = uniform_state(num_qubits) |> circ
     loss = (expect(QAOA.problem_hamiltonian(problem), reg) |> real) - sum(a.^2)
@@ -109,7 +109,7 @@ end
     problem = QAOA.Problem(p, h_z, J)
     circ = QAOA.circuit(problem)
 
-    circ = QAOA.dispatch_parameters!(circ, problem, vcat(beta, gamma))
+    circ = QAOA.dispatch_parameters(circ, problem, vcat(beta, gamma))
 
     reg = uniform_state(num_qubits) |> circ
     loss = (expect(QAOA.problem_hamiltonian(problem), reg) |> real) - sum(a.^2)

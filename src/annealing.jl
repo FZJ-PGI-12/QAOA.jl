@@ -31,7 +31,7 @@ function anneal(problem::Problem, schedule::Function, T::Float64)
     β = 1 .- γ
     beta_and_gamma = τ .* vcat(β, γ)
     circ = circuit(problem)
-    circ = dispatch_parameters!(circ, problem, beta_and_gamma)
+    circ = dispatch_parameters(circ, problem, beta_and_gamma)
     probabilities = uniform_state(nqubits(circ)) |> circ |> probs
     probabilities
 end
@@ -60,7 +60,7 @@ function anneal(problem::Problem, beta::Vector{Float64}, gamma::Vector{Float64})
 
     beta_and_gamma = vcat(beta, gamma)
     circ = circuit(problem)
-    circ = dispatch_parameters!(circ, problem, beta_and_gamma)
+    circ = dispatch_parameters(circ, problem, beta_and_gamma)
     probabilities = uniform_state(nqubits(circ)) |> circ |> probs
     probabilities
 end
