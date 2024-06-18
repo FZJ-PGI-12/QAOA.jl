@@ -17,7 +17,7 @@ Returns the circuit with the all parameters in the proper places.
 - The number of driver parameters is the number of parameters in the circuit divided by the number of layers, minus the number of problem parameters.
 - The macro `ChainRulesCore.@ignore_derivatives` is necessary because `Zygote` does not support automatic differentiation through mutating code.
 """
-function dispatch_parameters!(circ, problem::Problem, beta_and_gamma)
+function dispatch_parameters(circ, problem::Problem, beta_and_gamma)
     @unpack_Problem problem
 
     num_driver_parameters = (nparameters(circ) ÷ num_layers) - (num_qubits + num_qubits * (num_qubits - 1) ÷ 2)
@@ -65,7 +65,7 @@ where ``N`` is `num_qubits`, ``h_i`` are the `local_fields` and ``J_{ij}`` are t
 """    
 function cost_function(problem::Problem, beta_and_gamma::Vector{Float64})::Real
     circ = ChainRulesCore.@ignore_derivatives(circuit(problem))
-    circ = dispatch_parameters!(circ, problem, beta_and_gamma)
+    circ = dispatch_parameters(circ, problem, beta_and_gamma)
     reg = apply(uniform_state(nqubits(circ)), circ)
     expect(ChainRulesCore.@ignore_derivatives(QAOA.problem_hamiltonian(problem)), reg) |> real
 end
@@ -109,7 +109,7 @@ function optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}, 
     cost, params, info = optimize(opt, beta_and_gamma)
 
     circ = circuit(problem)
-    circ = dispatch_parameters!(circ, problem, params)
+    circ = dispatch_parameters(circ, problem, params)
     probabilities = uniform_state(nqubits(circ)) |> circ |> probs
     cost, params, probabilities
 end
@@ -157,7 +157,7 @@ function optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}; 
     end
 
     circ = circuit(problem)
-    circ = dispatch_parameters!(circ, problem, params)
+    circ = dispatch_parameters(circ, problem, params)
     probabilities = uniform_state(nqubits(circ)) |> circ |> probs
     cost, params, probabilities
 end
