@@ -17,15 +17,15 @@ YaoBlocks = "418bc28f-b43b-5e0b-a6e7-61bbc1a2c1df"
 Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
 
 [compat]
-ChainRules = "1.48"
-ChainRulesCore = "1.15.7"
-Distributions = "0.25.86"
+ChainRules = "1.69.0"
+ChainRulesCore = "1.24.0"
+Distributions = "0.25.109"
 DocStringExtensions = "0.9.3"
-NLopt = "0.6.5, 1"
+NLopt = "1.0.2"
 Parameters = "0.12.3"
-Yao = "0.8.7"
-YaoBlocks = "0.13.7"
-Zygote = "0.6.55"
+Yao = "0.8"
+YaoBlocks = "0.13"
+Zygote = "0.6.70"
 julia = "1.8"
 
 [extras]
