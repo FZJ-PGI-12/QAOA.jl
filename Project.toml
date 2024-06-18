@@ -23,10 +23,10 @@ Distributions = "0.25.109"
 DocStringExtensions = "0.9.3"
 NLopt = "1.0.2"
 Parameters = "0.12.3"
-Yao = "0.8.7"
+Yao = "0.9.0"
 YaoBlocks = "0.13.13"
 Zygote = "0.6.70"
-julia = "1.8"
+julia = "1.9"
 
 [extras]
 PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
