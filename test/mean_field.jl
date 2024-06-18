@@ -34,3 +34,39 @@
     @test QAOA.expectation(S, mf_problem.local_fields, mf_problem.couplings) ≈ 2.5367551470078142 rtol = 1e-10
     @test QAOA.mean_field_solution(mf_problem, β, γ) ≈ [ 1., -1., -1., -1.] rtol = 1e-10
 end
+
+@testset "SK model ODE solver" begin
+
+    # schedule
+    T_final = 5.0
+    schedule = t -> t/T_final
+
+    # initial spins
+    N = 5
+    S = [[1., 0., 0.] for _ in 1:N-1] # fix final spin (i.e. leave it out)
+
+    # SK model
+   J = [0.0 -0.12793573348166293 -0.21670411503453044 -1.1866001328940943 -0.0037049988892551987; 
+       -0.12793573348166293 0.0 0.14105236137693697 0.1882996047044451 -0.4765521402619942; 
+       -0.21670411503453044 0.14105236137693697 0.0 0.25097277081028896 -0.5838590431585854; 
+       -1.1866001328940943 0.1882996047044451 0.25097277081028896 0.0 -0.3056466236010491; 
+       -0.0037049988892551987 -0.4765521402619942 -0.5838590431585854 -0.3056466236010491 0.0]
+
+
+    mf_problem = QAOA.Problem(0, J)
+
+    # evolution
+    sol = QAOA.evolve(mf_problem.local_fields, mf_problem.couplings, T_final, schedule)
+    
+    println(sol.u)
+
+    # solution
+    S_test = [[-0.4280189887648497,  -0.57845514021309,     0.6943985858408479],
+              [-0.4161436735954462,  -0.1965348184395327,  -0.8878054449413042],
+              [-0.3151885316091266,   0.14809317283731896, -0.9374031159010826],
+              [ 0.06825210700086091,  0.5908423629410464,  -0.8038948638001017]]
+
+    @test S ≈ S_test rtol = 1e-10                       
+    @test QAOA.expectation(S, mf_problem.local_fields, mf_problem.couplings) ≈ 2.5367551470078142 rtol = 1e-10
+    @test QAOA.mean_field_solution(mf_problem, β, γ) ≈ [ 1., -1., -1., -1.] rtol = 1e-10
+end

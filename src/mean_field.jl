@@ -14,6 +14,21 @@ function magnetization(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix
 end
 
 """
+    magnetization(S::Matrix{<:Real}, h::Vector{<:Real}, J::Matrix{<:Real})
+
+Second dispatch for the magnetization vector belonging to the matrix input `S`.
+
+### Notes
+- The magnetization vector is defined as 
+
+    ``m_i(t) = h_i + \\sum_{j=1}^N J_{ij} n_j^z(t)``.
+
+"""
+function magnetization(S::Matrix{<:Real}, h::Vector{<:Real}, J::Matrix{<:Real})
+    h + [sum([J[i, j] * S[3, j] for j in 1:size(S)[2]]) for i in 1:size(S)[2]]
+end
+
+"""
     V_P(alpha::Real)
 
 Returns the rotation matrix resulting from the problem Hamiltonian.    
@@ -94,6 +109,65 @@ function evolve(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Mat
 
     S
 end
+
+
+"""
+    evolve(h::Vector{<:Real}, J::Matrix{<:Real}, T_final::Float64, schedule::Function; rtol=1e-4, atol=1e-6)
+
+Evolves the mean-field equations of motion for a given system.
+
+# Input
+- `h::Vector{<:Real}`: External magnetic field vector.
+- `J::Matrix{<:Real}`: Interaction matrix.
+- `T_final::Float64`: Final time of evolution.
+- `schedule::Function`: Scheduling function for the evolution.
+- `rtol`: Relative tolerance for the ODE solver (default: `1e-4`).
+- `atol`: Absolute tolerance for the ODE solver (default: `1e-6`).
+
+# Output
+- `sol`: Solution object from the ODE solver containing the time evolution of the system.
+
+# Notes
+This function solves the mean-field equations of motion for a system described by an external magnetic field `h` and an interaction matrix `J` over a time interval from `0.0` to `T_final`. The evolution is controlled by a scheduling function `schedule(t)` which interpolates between different dynamical regimes.
+
+The mean-field equations are defined as:
+
+    ``
+    dS/dt = f(S, t)
+    ``
+where `S` is the state vector and `f(S, t)` is derived from the Hamiltonian of the system.
+
+The initial state `S₀` is assumed to be the vector `[1.0, 0.0, 0.0]` for each spin.
+
+The function uses the `Tsit5()` solver from the `DifferentialEquations.jl` package to solve the ODE.
+
+# Example
+```julia
+using DifferentialEquations
+
+h = [0.5, -0.5, 0.3]
+J = [0.0 0.1 0.2; 0.1 0.0 0.3; 0.2 0.3 0.0]
+T_final = 10.0
+schedule(t) = t / T_final
+
+sol = evolve_mean_field(h, J, T_final, schedule)
+```
+"""
+function evolve(h::Vector{<:Real}, J::Matrix{<:Real}, T_final::Float64, schedule::Function; rtol=1e-4, atol=1e-6)
+
+    function mf_eom(dS, S, _, t)
+        magnetization = h + [sum([J[i, j] * S[3, j] for j in 1:size(S)[2]]) for i in 1:size(S)[2]]
+        dS .= reduce(hcat, [[-2 * schedule(t) * magnetization[i] * S[2, i], 
+                             -2 * (1 - schedule(t)) * S[3, i] + 2 * schedule(t) * magnetization[i] * S[1, i],
+                              2 * (1 - schedule(t)) * S[2, i]] for i in 1:size(S)[2]])
+    end
+
+    S₀ = reduce(hcat, [[1., 0., 0.] for _ in 1:size(h)[1]])
+    prob = ODEProblem(mf_eom, S₀, (0.0, T_final))
+    sol = solve(prob, Tsit5(), reltol=rtol, abstol=atol)
+    sol
+end
+
 
 """
     expectation(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real})
