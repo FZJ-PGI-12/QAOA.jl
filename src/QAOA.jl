@@ -5,6 +5,7 @@ using LinearAlgebra
 using Parameters
 using NLopt
 using DocStringExtensions
+using DifferentialEquations
 
 import Distributions, Random
 
