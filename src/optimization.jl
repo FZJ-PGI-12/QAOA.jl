@@ -2,9 +2,6 @@
     problem_parameters(local_fields::Vector{Real}, couplings::Matrix{Real})::Vector{Real}
 
 Returns the problem parameters in the proper order, such that they can be `dispatch`ed to the circuit directly.
-
-### Notes
-- The macro `Zygote.@nograd` is necessary because `Zygote` does not support automatic differentiation through mutating code.
 """
 function problem_parameters(local_fields::Vector{Real}, couplings::Matrix{Real})::Vector{Real}
     num_qubits = size(local_fields)[1]
@@ -18,6 +15,7 @@ Returns the circuit with the all parameters in the proper places.
 
 ### Notes
 - The number of driver parameters is the number of parameters in the circuit divided by the number of layers, minus the number of problem parameters.
+- The macro `ChainRulesCore.@ignore_derivatives` is necessary because `Zygote` does not support automatic differentiation through mutating code.
 """
 function dispatch_parameters!(circ, problem::Problem, beta_and_gamma)
     @unpack_Problem problem
@@ -36,9 +34,6 @@ end
     problem_hamiltonian(problem::Problem)
 
 Returns the problem Hamiltonian corresponding to `problem`.
-
-### Notes
-- The macro `Zygote.@nograd` is necessary because `Zygote` does not support automatic differentiation through mutating code.
 """
 function problem_hamiltonian(problem::Problem)
     H =  sum([problem.local_fields[i] * put(i => Z)(problem.num_qubits) for i in 1:problem.num_qubits])
