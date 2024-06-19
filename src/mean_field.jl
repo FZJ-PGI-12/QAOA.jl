@@ -47,7 +47,7 @@ function V_D(alpha::Real)
 end
 
 """
-    evolve(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+    evolve!(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
 
 ### Input
 - `S::Vector{<:Vector{<:Real}}`: The initial vector of all spin vectors.
@@ -57,7 +57,7 @@ end
 - `γ::Vector{<:Real}`: The vector of QAOA problem parameters.
 
 ### Output
-- The vector of all spin vectors after a full mean-field AOA evolution.
+- The input `S` is now the vector of all spin vectors after a full mean-field AOA evolution.
 
 ### Notes
 - This is the first dispatch of `evolve`, which only returns the final vector of spin vectors.
@@ -65,21 +65,19 @@ end
 
     `S = [[1., 0., 0.] for _ in 1:num_qubits]`.
 """
-function evolve(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+function evolve!(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
     @assert size(β)[1] == size(γ)[1] "Invalid QAOA parameters β and γ!"
 
     for k in 1:size(β)[1]
         # signs in front of β, γ are reversed relative to the original paper
         v_P = V_P.(-2γ[k] * magnetization(S, h, J))
         v_D = V_D.(-2β[k] * ones(size(S)[1]))
-        S = [v_D[i] * v_P[i] * S[i] for i in 1:size(S)[1]]
+        S .= [v_D[i] * v_P[i] * S[i] for i in 1:size(S)[1]]
     end    
-
-    S
 end
 
 """
-    evolve(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+    evolve!(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
 
 ### Input
 - `S::Vector{<:Vector{<:Vector{<:Real}}}`: An empty history of the vector of all spin vectors.
@@ -89,7 +87,7 @@ end
 - `γ::Vector{<:Real}`: The vector of QAOA problem parameters.
 
 ### Output
-- The full history of the vector of all spin vectors after a full mean-field AOA evolution.
+- The input `S` is now the full history of the vector of all spin vectors after a full mean-field AOA evolution.
 
 ### Notes
 - This is the second dispatch of `evolve`, which returns the full history of the vector of spin vectors.    
@@ -97,7 +95,7 @@ end
 
     `S = [[[1., 0., 0.] for _ in 1:num_qubits] for _ in 1:num_layers+1]`.
 """
-function evolve(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+function evolve!(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
     @assert size(β)[1] == size(γ)[1] "Invalid QAOA parameters β and γ!"
 
     for k in 1:size(β)[1]
@@ -106,8 +104,6 @@ function evolve(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Mat
         v_D = V_D.(-2β[k] * ones(size(h)[1]))
         S[k+1] = [v_D[i] * v_P[i] * S[k][i] for i in 1:size(h)[1]]
     end    
-
-    S
 end
 
 
@@ -128,7 +124,7 @@ Evolves the mean-field equations of motion for a given system.
 - `sol`: Solution object from the ODE solver containing the time evolution of the system.
 
 # Notes
-- This function solves the mean-field equations of motion for a system described by an external magnetic field `h` and an interaction matrix `J` over a time interval from `0.0` to `T_final`. The evolution is controlled by a scheduling function `schedule(t)` which interpolates between different dynamical regimes.
+- This is the third dispatch of `evolve`, which directly solves the full mean-field equations of motion for a system described by an external magnetic field `h` and an interaction matrix `J` over a time interval from `0.0` to `T_final`. The evolution is controlled by a scheduling function `schedule(t)` which interpolates between different dynamical regimes.
 - The initial state `S₀` is assumed to be the vector `[1.0, 0.0, 0.0]` for each spin.
 - The function uses the `Tsit5()` solver from the `DifferentialEquations.jl` package to solve the ODE.
 
@@ -210,7 +206,7 @@ function mean_field_solution(problem::Problem, β::Vector{<:Real}, γ::Vector{<:
 
     # evolution
     S = [[1., 0., 0.] for _ in 1:num_qubits]
-    S = QAOA.evolve(S, local_fields, couplings, β, γ)
+    evolve!(S, local_fields, couplings, β, γ)
 
     # solution (rounded S_z values)
     sign.([S[i][3] for i in 1:size(S)[1]]) 
