@@ -29,6 +29,31 @@ function magnetization(S::Matrix{<:Real}, h::Vector{<:Real}, J::Matrix{<:Real})
 end
 
 """
+    magnetization(S::Matrix{<:Real}, h::Vector{<:Real}, J::Matrix{<:Real})
+
+Third dispatch for the magnetization vector.
+
+### Notes
+- The magnetization vector in the most general case is defined as 
+
+    ``m_i(t) = h_i + \\sum_{j=1}^N \\left( J_{ij} n_j^z(t) + sum_{j=1}^N J_{ijk} n_j^z(t)n_k^z(t) + \\cdots \\right)``.
+
+"""
+function magnetization(S::Vector{<:Real}, tensor)
+    mag = zeros(size(S)[1])
+    for (idxs, val) in tensor
+        for i in idxs
+            # remove the current spin from the list
+            the_other_idxs = filter!(idx -> idx != i, collect(idxs))
+            # special case are local fields
+            the_other_idxs = the_other_idxs == [] ? [0] : the_other_idxs
+            mag[i] += val * prod([get(S, j, 1.0) for j in the_other_idxs])
+        end
+    end
+    mag
+end
+
+"""
     V_P(alpha::Real)
 
 Returns the rotation matrix resulting from the problem Hamiltonian.    
@@ -159,31 +184,12 @@ function evolve(tensor_problem::TensorProblem, T_final::Float64, schedule::Funct
     @unpack_TensorProblem tensor_problem
     
     function mf_eom(dS, S, _, t)
-        magnetization_x = zeros(num_qubits)
-        for (idxs, val) in xtensor
-            for i in idxs
-                # remove the current spin from the list
-                the_other_idxs = filter!(idx -> idx != i, collect(idxs))
-                # special case are local fields
-                the_other_idxs = the_other_idxs == [] ? [0] : the_other_idxs
-                magnetization_x[i] += val * prod([get(S[1, :], j, 1.0) for j in the_other_idxs])
-            end
-        end
-
-        magnetization_z = zeros(num_qubits)
-        for (idxs, val) in ztensor
-            for i in idxs
-                # remove the current spin from the list
-                the_other_idxs = filter!(idx -> idx != i, collect(idxs))
-                # special case are local fields
-                the_other_idxs = the_other_idxs == [] ? [0] : the_other_idxs
-                magnetization_z[i] += val * prod([get(S[3, :], j, 1.0) for j in the_other_idxs])
-            end
-        end
+        magnetization_x = magnetization(S[1, :], xtensor)
+        magnetization_z = magnetization(S[3, :], ztensor)
 
         dnx(i) = -2 * schedule(t) * magnetization_z[i] * S[2, i]
-        dny(i) = -2 * (1 - schedule(t)) * S[3, i] + 2 * schedule(t) * magnetization_z[i] * S[1, i]
-        dnz(i) =  2 * (1 - schedule(t)) * S[2, i]
+        dny(i) = -2 * (1 - schedule(t)) * magnetization_x[i] * S[3, i] + 2 * schedule(t) * magnetization_z[i] * S[1, i]
+        dnz(i) =  2 * (1 - schedule(t)) * magnetization_x[i] * S[2, i]
         dS .= reduce(hcat, [[dnx(i), dny(i), dnz(i)] for i in 1:size(S)[2]])
     end
 
