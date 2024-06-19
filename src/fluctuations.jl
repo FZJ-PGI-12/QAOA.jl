@@ -56,7 +56,7 @@ function evolve_fluctuations(problem::Problem, τ::Real, β::Vector{<:Real}, γ:
     # evolution
     S = [[1., 0., 0.] for _ in 1:num_qubits]
     S = [S for _ in 1:num_layers+1]
-    S = evolve(S, local_fields, couplings, β, γ)
+    evolve!(S, local_fields, couplings, β, γ)
     solutions = mean_field_solution(S[end])  
     
     M = 1.0I(2num_qubits)

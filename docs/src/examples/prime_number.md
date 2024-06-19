@@ -78,7 +78,7 @@ and call the mean-field AOA:
 mf_problem = Problem(p, -h, -J)
 S = [[1., 0., 0.] for _ in 1:N]
 
-S = evolve!(S, mf_problem.local_fields, mf_problem.couplings, β, γ)
+evolve!(S, mf_problem.local_fields, mf_problem.couplings, β, γ)
 ```
 As you can verify with this [notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/prime_number.ipynb), the solution returned by our algorithm agrees with the true solution:
 ```julia

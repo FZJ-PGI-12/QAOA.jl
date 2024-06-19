@@ -38,8 +38,8 @@ optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}; niter::In
 ### Mean-Field Approximate Optimization Algorithm
 
 ```@docs
-evolve(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
-evolve(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+evolve!(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
+evolve!(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
 evolve(h::Vector{<:Real}, J::Matrix{<:Real}, T_final::Float64, schedule::Function; rtol=1e-4, atol=1e-6)
 expectation(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real})
 mean_field_solution(problem::Problem, β::Vector{<:Real}, γ::Vector{<:Real})
