@@ -64,10 +64,13 @@ $(TYPEDFIELDS)
     num_qubits::Int
 
     "The coupling tensor of the driver Hamiltonian."
-    xtensor::Dict{Tuple, Float64}
+    xtensor
 
     "The coupling tensor of the problem Hamiltonian."
-    ztensor::Dict{Tuple, Float64}
+    ztensor
+
+    TensorProblem(num_qubits, xtensor, ztensor) = new(num_qubits, xtensor, ztensor)
+    TensorProblem(num_qubits, ztensor) = new(num_qubits, Dict((1,) => 0.0), ztensor)
 end
 
 
