@@ -48,6 +48,8 @@ m_i(t) = h_i + \sum_{j=1}^N J_{ij} n_j^z(t).
 \end{align}
 ```
 
+## Mean-Field Approximate Optimization
+
 To implement these dynamics within `QAOA.jl`, we begin by defining a schedule:
 ```julia
 using QAOA, LinearAlgebra
@@ -82,9 +84,9 @@ This is all we need to call the mean-field dynamics. The initial values are
 ```julia
 S = [[1., 0., 0.] for _ in 1:N-1]
 ```
-where we have taken into account that the _final spin is fixed_. The final vector of spins is then obtained as
+where we have taken into account that the _final spin is fixed_. The final vector of spins is then obtained via
 ```julia
-S = evolve!(S, mf_problem.local_fields, mf_problem.couplings, β, γ)
+evolve!(S, mf_problem.local_fields, mf_problem.couplings, β, γ)
 ```
 The energy expectation value in mean-field approximation is 
 ```julia
@@ -94,3 +96,55 @@ and the solution of the algorithm can be retrieved by calling
 ```julia
 sol = mean_field_solution(S)
 ```
+
+## Equations of Motion via ODE Solver
+
+There is also the option to solve the full mean-field equations of motion (s. e.g. equation (9) [in this paper](https://arxiv.org/pdf/2403.11548)) via `OrdinaryDiffEq.jl`. For a simple linear annealing schedule, we can do this by calling
+```
+T_final = p * τ
+schedule_function = t -> t/T_final
+sol = evolve(mf_problem.local_fields, mf_problem.couplings, T_final, schedule_function)
+```
+
+### Tensor Problem Definition
+
+Instead of being restricted to simple QUBO problems defined by `local_fields` ``h_i`` and `couplings` ``J_{ij}`` as introduced above, we also want to be able to solve problems defined in terms of arbitrary tensors, e.g.
+```math
+\begin{align}
+    H(t) = (1 - s(t)) \sum_{i=1}^N n_i^x(t) + s(t)\sum_{i=1}^N \bigg[ J_i + \sum_{j>i} \big[ J_{ij} + \sum_{k>j} J_{ijk}n_k^z(t) + \cdots \big]  n_j^z(t) \bigg] n_i^z(t).
+\end{align}
+```
+To define the tensors for the standard QUBO set-up discussed here, we build the dictionaries
+```julia
+xtensor = Dict([(i, ) => 1.0 for i in 1:mf_problem.num_qubits])
+```
+for the local transverse-field driver and
+```julia
+ztensor = Dict()
+for (i, h_i) in enumerate(mf_problem.local_fields)
+    if h_i != 0.0
+        ztensor[(i,)] = h_i
+    end
+end
+
+for i in 1:mf_problem.num_qubits
+    for j in i+1:mf_problem.num_qubits
+        if mf_problem.couplings[i, j] != 0.0
+            ztensor[(i, j)] = mf_problem.couplings[i, j]
+        end
+    end
+end
+```
+for the problem Hamiltonian. We then feed these to
+```julia
+tensor_problem = TensorProblem(mf_problem.num_qubits, xtensor, ztensor)
+```
+and finally call
+```julia
+sol = evolve(tensor_problem, T_final, schedule_function)
+```
+which reproduces the same result as above.
+
+
+!!! note
+    `TensorProblem` can also deal with arbitrary higher-order tensors for the driver Hamiltonian!
