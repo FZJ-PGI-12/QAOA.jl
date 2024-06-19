@@ -52,6 +52,26 @@ end
 
 
 
+"""
+    TensorProblem(num_qubits::Int, xtensor::Dict{Tuple, Float64}, ztensor::Dict{Tuple, Float64})
+
+A container holding the basic properties of the QAOA circuit.
+
+$(TYPEDFIELDS)
+"""
+@with_kw struct TensorProblem
+    "The number of qubits of the QAOA circuit."
+    num_qubits::Int
+
+    "The coupling tensor of the driver Hamiltonian."
+    xtensor::Dict{Tuple, Float64}
+
+    "The coupling tensor of the problem Hamiltonian."
+    ztensor::Dict{Tuple, Float64}
+end
+
+
+
 
 
 

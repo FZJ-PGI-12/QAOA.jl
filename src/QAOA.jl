@@ -10,7 +10,7 @@ using OrdinaryDiffEq
 import Distributions, Random
 
 include("problem.jl")
-export Problem
+export Problem, TensorProblem
 
 include("optimization.jl")
 export cost_function, optimize_parameters

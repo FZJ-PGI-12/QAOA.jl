@@ -155,6 +155,44 @@ function evolve(h::Vector{<:Real}, J::Matrix{<:Real}, T_final::Float64, schedule
     sol
 end
 
+function evolve(tensor_problem::TensorProblem, T_final::Float64, schedule::Function; rtol=1e-4, atol=1e-6)
+    @unpack_TensorProblem tensor_problem
+    
+    function mf_eom(dS, S, _, t)
+        magnetization_x = zeros(num_qubits)
+        for (idxs, val) in xtensor
+            for i in idxs
+                # remove the current spin from the list
+                the_other_idxs = filter!(idx -> idx != i, collect(idxs))
+                # special case are local fields
+                the_other_idxs = the_other_idxs == [] ? [0] : the_other_idxs
+                magnetization_x[i] += val * prod([get(S[1, :], j, 1.0) for j in the_other_idxs])
+            end
+        end
+
+        magnetization_z = zeros(num_qubits)
+        for (idxs, val) in ztensor
+            for i in idxs
+                # remove the current spin from the list
+                the_other_idxs = filter!(idx -> idx != i, collect(idxs))
+                # special case are local fields
+                the_other_idxs = the_other_idxs == [] ? [0] : the_other_idxs
+                magnetization_z[i] += val * prod([get(S[3, :], j, 1.0) for j in the_other_idxs])
+            end
+        end
+
+        dnx(i) = -2 * schedule(t) * magnetization_z[i] * S[2, i]
+        dny(i) = -2 * (1 - schedule(t)) * S[3, i] + 2 * schedule(t) * magnetization_z[i] * S[1, i]
+        dnz(i) =  2 * (1 - schedule(t)) * S[2, i]
+        dS .= reduce(hcat, [[dnx(i), dny(i), dnz(i)] for i in 1:size(S)[2]])
+    end
+
+    S₀ = reduce(hcat, [[1., 0., 0.] for _ in 1:num_qubits])
+    prob = ODEProblem(mf_eom, S₀, (0.0, T_final))
+    sol = solve(prob, Tsit5(), reltol=rtol, abstol=atol)
+    sol
+end
+
 
 """
     expectation(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real})
