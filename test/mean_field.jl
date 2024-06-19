@@ -62,7 +62,7 @@ end
 
     # evolution
     QAOA.evolve!(S, mf_problem.local_fields, mf_problem.couplings, β, γ)
-    sol = QAOA.evolve(mf_problem.local_fields, mf_problem.couplings, T_final, schedule)#, rtol=1e-3, atol=1e-5)
+    sol = QAOA.evolve(mf_problem.local_fields, mf_problem.couplings, T_final, schedule)
     
     # solution
     S_test = [[-0.4280189887648497,  -0.57845514021309,     0.6943985858408479],
@@ -70,5 +70,48 @@ end
               [-0.3151885316091266,   0.14809317283731896, -0.9374031159010826],
               [ 0.06825210700086091,  0.5908423629410464,  -0.8038948638001017]]
 
-    @test sol.u[end] ≈ reduce(hcat, S) rtol = 1e-3                       
+    @test sol.u[end] ≈ reduce(hcat, S) rtol = 1e-3
+    @test sum(sol.u) ≈ [432.6544348083801 488.11178286236054 454.1255893889318 404.59225549943346; 1.3589602780076746 -1.8151196096279834 -1.5255483532531613 -1.2092559226217268; 599.1679002608298 -584.1608774360905 -609.9976664419187 -625.1997427077566] rtol = 1e-8
+end
+
+@testset "SK model tensor" begin
+    T_final = 500.0
+    schedule = t -> t/T_final
+
+    # initial spins
+    N = 5
+    S = [[1., 0., 0.] for _ in 1:N-1] # fix final spin (i.e. leave it out)
+
+    # SK model
+   J = [0.0 -0.12793573348166293 -0.21670411503453044 -1.1866001328940943 -0.0037049988892551987; 
+       -0.12793573348166293 0.0 0.14105236137693697 0.1882996047044451 -0.4765521402619942; 
+       -0.21670411503453044 0.14105236137693697 0.0 0.25097277081028896 -0.5838590431585854; 
+       -1.1866001328940943 0.1882996047044451 0.25097277081028896 0.0 -0.3056466236010491; 
+       -0.0037049988892551987 -0.4765521402619942 -0.5838590431585854 -0.3056466236010491 0.0]
+
+    mf_problem = QAOA.Problem(0, J)
+
+    # create tensors
+    xtensor = Dict([(i, ) => 1.0 for i in 1:mf_problem.num_qubits])
+    ztensor = Dict()
+    for (i, h_i) in enumerate(mf_problem.local_fields)
+        if h_i != 0.0
+            ztensor[(i,)] = h_i
+        end
+    end
+    
+    for i in 1:mf_problem.num_qubits
+        for j in i+1:mf_problem.num_qubits
+            if mf_problem.couplings[i, j] != 0.0
+                ztensor[(i, j)] = mf_problem.couplings[i, j]
+            end
+        end
+    end 
+    
+    tensor_problem = TensorProblem(mf_problem.num_qubits, xtensor, ztensor)
+
+    # evolution
+    sol = QAOA.evolve(tensor_problem, T_final, schedule)
+
+    @test sum(sol.u) ≈ [432.6544348083801 488.11178286236054 454.1255893889318 404.59225549943346; 1.3589602780076746 -1.8151196096279834 -1.5255483532531613 -1.2092559226217268; 599.1679002608298 -584.1608774360905 -609.9976664419187 -625.1997427077566] rtol = 1e-8                       
 end
