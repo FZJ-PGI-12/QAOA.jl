@@ -111,7 +111,7 @@ end
     tensor_problem = TensorProblem(mf_problem.num_qubits, xtensor, ztensor)
 
     # evolution
-    sol = QAOA.evolve(tensor_problem, T_final, schedule)
+    sol = QAOA.evolve(tensor_problem, T_final, t -> 1 - schedule(t), schedule)
 
     @test sum(sol.u) ≈ [432.6544348083801 488.11178286236054 454.1255893889318 404.59225549943346; 1.3589602780076746 -1.8151196096279834 -1.5255483532531613 -1.2092559226217268; 599.1679002608298 -584.1608774360905 -609.9976664419187 -625.1997427077566] rtol = 1e-8                       
 end

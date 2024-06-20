@@ -41,6 +41,7 @@ optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}; niter::In
 evolve!(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
 evolve!(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
 evolve(h::Vector{<:Real}, J::Matrix{<:Real}, T_final::Float64, schedule::Function; rtol=1e-4, atol=1e-6)
+evolve(tensor_problem::TensorProblem, T_final::Float64, schedule_x::Function, schedule_z::Function; rtol=1e-4, atol=1e-6)
 expectation(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real})
 mean_field_solution(problem::Problem, β::Vector{<:Real}, γ::Vector{<:Real})
 mean_field_solution(S::Vector{<:Vector{<:Real}})

@@ -141,9 +141,9 @@ tensor_problem = TensorProblem(mf_problem.num_qubits, xtensor, ztensor)
 ```
 and finally call
 ```julia
-sol = evolve(tensor_problem, T_final, schedule_function)
+sol = QAOA.evolve(tensor_problem, T_final, t -> 1 - schedule_function(t), schedule_function)
 ```
-which reproduces the same result as above.
+which uses a generalized two-component schedule (for the driver and problem parts of the total Hamiltonian, respectively).
 
 
 !!! note

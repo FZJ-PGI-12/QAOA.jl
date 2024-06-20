@@ -149,14 +149,12 @@ Evolves the mean-field equations of motion for a given system.
 - `sol`: Solution object from the ODE solver containing the time evolution of the system.
 
 # Notes
-- This is the third dispatch of `evolve`, which directly solves the full mean-field equations of motion for a system described by an external magnetic field `h` and an interaction matrix `J` over a time interval from `0.0` to `T_final`. The evolution is controlled by a scheduling function `schedule(t)` which interpolates between different dynamical regimes.
+- This is the third dispatch of `evolve`, which directly solves the full mean-field equations of motion for a system described by an external magnetic field `h` and an interaction matrix `J` over a time interval from `0.0` to `T_final`. The evolution is controlled by a scheduling function `schedule(t)`, which interpolates between the different dynamical regimes.
 - The initial state `S₀` is assumed to be the vector `[1.0, 0.0, 0.0]` for each spin.
 - The function uses the `Tsit5()` solver from the `DifferentialEquations.jl` package to solve the ODE.
 
 # Example
 ```julia
-using DifferentialEquations
-
 h = [0.5, -0.5, 0.3]
 J = [0.0 0.1 0.2; 0.1 0.0 0.3; 0.2 0.3 0.0]
 T_final = 10.0
@@ -180,16 +178,51 @@ function evolve(h::Vector{<:Real}, J::Matrix{<:Real}, T_final::Float64, schedule
     sol
 end
 
-function evolve(tensor_problem::TensorProblem, T_final::Float64, schedule::Function; rtol=1e-4, atol=1e-6)
+"""
+    evolve(tensor_problem::TensorProblem, T_final::Float64, schedule_x::Function, schedule_z::Function; rtol=1e-4, atol=1e-6)
+
+Evolves a mean-field approximation of a quantum system described by `tensor_problem` over time using specified scheduling functions for the x and z components of the Hamiltonian.
+
+# Input
+- `tensor_problem::TensorProblem`: A structured type containing the Hamiltonian tensors and the number of qubits.
+- `T_final::Float64`: The final time up to which the system should be evolved.
+- `schedule_x::Function`: A function defining the time-dependence of the x component of the Hamiltonian.
+- `schedule_z::Function`: A function defining the time-dependence of the z component of the Hamiltonian.
+- `rtol::Float64`: (optional) The relative tolerance for the ODE solver. Defaults to 1e-4.
+- `atol::Float64`: (optional) The absolute tolerance for the ODE solver. Defaults to 1e-6.
+
+# Output
+- `sol`: The solution object from the ODE solver, containing the time evolution of the system's state.
+
+# Notes
+- This is the fourth dispatch of `evolve`, which directly solves the full mean-field equations of motion for a system described by the tensors `xtensor` and `ztensor` over a time interval from `0.0` to `T_final`. The evolution is controlled by the scheduling functions `schedule_x(t)` and `schedule_z(t)`, which interpolate between the different dynamical regimes.
+- The initial state `S₀` is set to have all qubits in the state `[1, 0, 0]`. The differential equations are solved using the `Tsit5()` solver from the `DifferentialEquations.jl`` package, with specified relative and absolute tolerances.
+
+# Example
+```julia
+# Define your tensor problem and scheduling functions
+xtensor = Dict[(1,) => 1.0, (2,) => 1.0]
+ztensor = Dict[(1, 2) => 1.0]
+tensor_problem = TensorProblem(xtensor, ztensor, num_qubits)
+T_final = 10.0
+schedule(t) = t / T_final
+schedule_x(t) = 1 - schedule(t)
+schedule_z(t) = schedule(t)
+
+# Evolve the system
+sol = evolve(tensor_problem, T_final, schedule_x, schedule_z)
+```
+"""
+function evolve(tensor_problem::TensorProblem, T_final::Float64, schedule_x::Function, schedule_z::Function; rtol=1e-4, atol=1e-6)
     @unpack_TensorProblem tensor_problem
     
     function mf_eom(dS, S, _, t)
         magnetization_x = magnetization(S[1, :], xtensor)
         magnetization_z = magnetization(S[3, :], ztensor)
 
-        dnx(i) = -2 * schedule(t) * magnetization_z[i] * S[2, i]
-        dny(i) = -2 * (1 - schedule(t)) * magnetization_x[i] * S[3, i] + 2 * schedule(t) * magnetization_z[i] * S[1, i]
-        dnz(i) =  2 * (1 - schedule(t)) * magnetization_x[i] * S[2, i]
+        dnx(i) = -2 * schedule_z(t) * magnetization_z[i] * S[2, i]
+        dny(i) = -2 * schedule_x(t) * magnetization_x[i] * S[3, i] + 2 * schedule_z(t) * magnetization_z[i] * S[1, i]
+        dnz(i) =  2 * schedule_x(t) * magnetization_x[i] * S[2, i]
         dS .= reduce(hcat, [[dnx(i), dny(i), dnz(i)] for i in 1:size(S)[2]])
     end
 
