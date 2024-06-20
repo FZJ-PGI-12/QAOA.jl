@@ -69,8 +69,12 @@ $(TYPEDFIELDS)
     "The coupling tensor of the problem Hamiltonian."
     ztensor
 
-    TensorProblem(num_qubits, xtensor, ztensor) = new(num_qubits, xtensor, ztensor)
-    TensorProblem(num_qubits, ztensor) = new(num_qubits, Dict((1,) => 0.0), ztensor)
+    "A tensor specifying the X-catalyst Hamiltonian."
+    catalyst_xtensor
+
+    TensorProblem(num_qubits, xtensor, ztensor) = new(num_qubits, xtensor, ztensor, Dict((1,) => 0.0))
+    TensorProblem(num_qubits, ztensor) = new(num_qubits, Dict((1,) => 0.0), ztensor, Dict((1,) => 0.0))
+    TensorProblem(num_qubits, xtensor, ztensor, catalyst_xtensor) = new(num_qubits, xtensor, ztensor, catalyst_xtensor)
 end
 
 

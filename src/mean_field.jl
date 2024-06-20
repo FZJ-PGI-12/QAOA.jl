@@ -232,6 +232,26 @@ function evolve(tensor_problem::TensorProblem, T_final::Float64, schedule_x::Fun
     sol
 end
 
+function evolve(tensor_problem::TensorProblem, T_final::Float64, schedule_x::Function, schedule_z::Function, catalyst_schedule_x::Function; rtol=1e-4, atol=1e-6)
+    @unpack_TensorProblem tensor_problem
+    
+    function mf_eom(dS, S, _, t)
+        magnetization_x = magnetization(S[1, :], xtensor)
+        magnetization_z = magnetization(S[3, :], ztensor)
+        catalyst_x = magnetization(S[1, :], catalyst_xtensor)
+
+        dnx(i) = -2 *  schedule_z(t) * magnetization_z[i] * S[2, i]
+        dny(i) = -2 * (schedule_x(t) * magnetization_x[i] + catalyst_schedule_x(t) * catalyst_x) * S[3, i] + 2 * schedule_z(t) * magnetization_z[i] * S[1, i]
+        dnz(i) =  2 * (schedule_x(t) * magnetization_x[i] + catalyst_schedule_x(t) * catalyst_x) * S[2, i]
+        dS .= reduce(hcat, [[dnx(i), dny(i), dnz(i)] for i in 1:size(S)[2]])
+    end
+
+    S₀ = reduce(hcat, [[1., 0., 0.] for _ in 1:num_qubits])
+    prob = ODEProblem(mf_eom, S₀, (0.0, T_final))
+    sol = solve(prob, Tsit5(), reltol=rtol, abstol=atol)
+    sol
+end
+
 
 """
     expectation(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real})
