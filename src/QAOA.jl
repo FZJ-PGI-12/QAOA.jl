@@ -29,4 +29,7 @@ export evolve_fluctuations
 include("annealing.jl")
 export anneal
 
+include("catalyst.jl")
+export distance_matrix, distance_clusters, filtered_clusters
+
 end

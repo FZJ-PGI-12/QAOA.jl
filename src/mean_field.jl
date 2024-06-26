@@ -241,8 +241,8 @@ function evolve(tensor_problem::TensorProblem, T_final::Float64, schedule_x::Fun
         catalyst_x = magnetization(S[1, :], catalyst_xtensor)
 
         dnx(i) = -2 *  schedule_z(t) * magnetization_z[i] * S[2, i]
-        dny(i) = -2 * (schedule_x(t) * magnetization_x[i] + catalyst_schedule_x(t) * catalyst_x) * S[3, i] + 2 * schedule_z(t) * magnetization_z[i] * S[1, i]
-        dnz(i) =  2 * (schedule_x(t) * magnetization_x[i] + catalyst_schedule_x(t) * catalyst_x) * S[2, i]
+        dny(i) = -2 * (schedule_x(t) * magnetization_x[i] + catalyst_schedule_x(t) * catalyst_x[i]) * S[3, i] + 2 * schedule_z(t) * magnetization_z[i] * S[1, i]
+        dnz(i) =  2 * (schedule_x(t) * magnetization_x[i] + catalyst_schedule_x(t) * catalyst_x[i]) * S[2, i]
         dS .= reduce(hcat, [[dnx(i), dny(i), dnz(i)] for i in 1:size(S)[2]])
     end
 
