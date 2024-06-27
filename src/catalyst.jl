@@ -117,5 +117,5 @@ function filtered_clusters(sol_t::Vector, n_vals::Matrix, dist=0.2, cutoff=0.5)
         end
         push!(filtered_clusters, filtered_cluster)
     end
-    filter!(!isempty, filtered_clusters)
+    filter!(c -> size(c)[1] > 1, filtered_clusters)
 end
