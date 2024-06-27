@@ -72,9 +72,13 @@ $(TYPEDFIELDS)
     "A tensor specifying the X-catalyst Hamiltonian."
     catalyst_xtensor
 
-    TensorProblem(num_qubits, xtensor, ztensor) = new(num_qubits, xtensor, ztensor, Dict((1,) => 0.0))
-    TensorProblem(num_qubits, ztensor) = new(num_qubits, Dict((1,) => 0.0), ztensor, Dict((1,) => 0.0))
-    TensorProblem(num_qubits, xtensor, ztensor, catalyst_xtensor) = new(num_qubits, xtensor, ztensor, catalyst_xtensor)
+    "A tensor specifying the Z-catalyst Hamiltonian."
+    catalyst_ztensor
+
+    TensorProblem(num_qubits, xtensor, ztensor) = new(num_qubits, xtensor, ztensor, Dict((1,) => 0.0), Dict((1,) => 0.0))
+    TensorProblem(num_qubits, ztensor) = new(num_qubits, Dict((1,) => 0.0), ztensor, Dict((1,) => 0.0), Dict((1,) => 0.0))
+    TensorProblem(num_qubits, xtensor, ztensor, catalyst_xtensor) = new(num_qubits, xtensor, ztensor, catalyst_xtensor, Dict((1,) => 0.0))
+    TensorProblem(num_qubits, xtensor, ztensor, catalyst_xtensor, catalyst_ztensor) = new(num_qubits, xtensor, ztensor, catalyst_xtensor, catalyst_ztensor)
 end
 
 
