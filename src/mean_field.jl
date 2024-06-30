@@ -252,7 +252,7 @@ function evolve(tensor_problem::TensorProblem, T_final::Float64, schedule_x::Fun
     sol
 end
 
-function evolve(tensor_problem::TensorProblem, T_final::Float64, schedule_x::Function, schedule_z::Function, catalyst_schedule_x::Function, catalyst_schedule_z::Function=catalyst_schedule_x; rtol=1e-4, atol=1e-6)
+function evolve(tensor_problem::TensorProblem, T_final::Float64, schedule_x::Function, schedule_z::Function, catalyst_schedule_x::Function, catalyst_schedule_z::Function; rtol=1e-4, atol=1e-6)
     @unpack_TensorProblem tensor_problem
     
     function mf_eom(dS, S, _, t)
