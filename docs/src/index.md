@@ -1,6 +1,6 @@
 # Welcome!
 
-`QAOA.jl` is a lightweight implementation of the [Quantum Approximate Optimization Algorithm (QAOA)](https://arxiv.org/abs/1411.4028) based on [`Yao.jl`](https://github.com/QuantumBFS/Yao.jl). Furthermore, it implements the [mean-field Approximate Optimization Algorithm](https://arxiv.org/abs/2303.00329), which is a useful tool to simulate quantum annealing and the QAOA in the mean-field approximation.
+`QAOA.jl` is a lightweight implementation of the [Quantum Approximate Optimization Algorithm (QAOA)](https://arxiv.org/abs/1411.4028) based on [`Yao.jl`](https://github.com/QuantumBFS/Yao.jl). Furthermore, it implements the [Mean-Field Approximate Optimization Algorithm](https://link.aps.org/doi/10.1103/PRXQuantum.4.030335), which is a useful tool to simulate quantum annealing and the QAOA in the mean-field approximation.
 
 ## Installation
 
@@ -40,8 +40,6 @@ optimize_parameters(problem::Problem, beta_and_gamma::Vector{Float64}; niter::In
 ```@docs
 evolve!(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
 evolve!(S::Vector{<:Vector{<:Vector{<:Real}}}, h::Vector{<:Real}, J::Matrix{<:Real}, β::Vector{<:Real}, γ::Vector{<:Real})
-evolve(h::Vector{<:Real}, J::Matrix{<:Real}, T_final::Float64, schedule::Function; rtol=1e-4, atol=1e-6)
-evolve(tensor_problem::TensorProblem, T_final::Float64, schedule_x::Function, schedule_z::Function; rtol=1e-4, atol=1e-6)
 expectation(S::Vector{<:Vector{<:Real}}, h::Vector{<:Real}, J::Matrix{<:Real})
 mean_field_solution(problem::Problem, β::Vector{<:Real}, γ::Vector{<:Real})
 mean_field_solution(S::Vector{<:Vector{<:Real}})

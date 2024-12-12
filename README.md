@@ -5,7 +5,7 @@
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.05364/status.svg)](https://doi.org/10.21105/joss.05364)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8086188.svg)](https://doi.org/10.5281/zenodo.8086188)
 
-This package implements the [Quantum Approximate Optimization Algorithm](https://arxiv.org/abs/1411.4028) and the [Mean-Field Approximate Optimization Algorithm](https://arxiv.org/abs/2303.00329).
+This package implements the [Quantum Approximate Optimization Algorithm](https://arxiv.org/abs/1411.4028) and the [Mean-Field Approximate Optimization Algorithm](https://link.aps.org/doi/10.1103/PRXQuantum.4.030335).
 
 ## Installation
 
