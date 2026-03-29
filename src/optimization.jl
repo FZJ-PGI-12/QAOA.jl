@@ -67,7 +67,7 @@ function cost_function(problem::Problem, beta_and_gamma::Vector{Float64})::Real
     circ = ChainRulesCore.@ignore_derivatives(circuit(problem))
     circ = dispatch_parameters(circ, problem, beta_and_gamma)
     reg = apply(uniform_state(nqubits(circ)), circ)
-    expect(ChainRulesCore.@ignore_derivatives(QAOA.problem_hamiltonian(problem)), reg) |> real
+    expect(ChainRulesCore.@ignore_derivatives(problem_hamiltonian(problem)), reg) |> real
 end
 
 """

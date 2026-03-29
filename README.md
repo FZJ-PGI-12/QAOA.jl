@@ -1,7 +1,9 @@
 # QAOA.jl
 
 [![CI](https://github.com/FZJ-PGI-12/QAOA.jl/workflows/CI/badge.svg)](https://github.com/FZJ-PGI-12/QAOA.jl/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/FZJ-PGI-12/QAOA.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/FZJ-PGI-12/QAOA.jl)
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://fzj-pgi-12.github.io/QAOA.jl/stable/)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://fzj-pgi-12.github.io/QAOA.jl/dev/)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.05364/status.svg)](https://doi.org/10.21105/joss.05364)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8086188.svg)](https://doi.org/10.5281/zenodo.8086188)
 

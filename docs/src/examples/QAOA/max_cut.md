@@ -1,4 +1,4 @@
-# [MaxCut] (@id MaxCut)
+# [MaxCut](@id MaxCut)
 
 !!! note
     A [Jupyter notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/max_cut.ipynb) related to this example is available in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks).

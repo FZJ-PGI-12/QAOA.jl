@@ -1,4 +1,4 @@
-# [Partition Problem] (@id PartitionProblem)
+# [Partition Problem](@id PartitionProblem)
 
 !!! note
     A [Jupyter notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/partition_problem.ipynb) related to this example is available in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks).

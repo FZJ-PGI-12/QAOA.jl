@@ -1,4 +1,4 @@
-# [Minimum Vertex Cover] (@id MinVertexCover)
+# [Minimum Vertex Cover](@id MinVertexCover)
 
 !!! note
     A [Jupyter notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/min_vertex_cover.ipynb) related to this example is available in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks). See also [Wikipedia](https://en.wikipedia.org/wiki/Vertex_cover).

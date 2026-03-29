@@ -1,4 +1,4 @@
-# [Quantum Annealing with `QAOA.jl`] (@id QANN)
+# [Quantum Annealing with `QAOA.jl`](@id QANN)
 
 !!! tip
      Have a look into our corresponding [SK](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/sherrington_kirkpatrick.ipynb) and [MaxCut](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/max_cut.ipynb) notebooks.

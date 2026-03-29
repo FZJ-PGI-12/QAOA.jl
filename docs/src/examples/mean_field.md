@@ -1,4 +1,4 @@
-# [Mean-Field Approximate Optimization Algorithm] (@id MFAOA)
+# [Mean-Field Approximate Optimization Algorithm](@id MFAOA)
 
 !!! tip
     For more details on the mean-field Approximate Optimization Algorithm, please consult [our paper](https://doi.org/10.1103/PRXQuantum.4.030335).
