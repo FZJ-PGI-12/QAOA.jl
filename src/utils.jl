@@ -30,7 +30,7 @@ function sherrington_kirkpatrick(N::Int, variance::Float64; seed::Int=1, num_lay
     J = UpperTriangular(J)
     J = J + transpose(J)
 
-    QAOA.Problem(num_layers, zeros(N), J)
+    Problem(num_layers, zeros(N), J)
 end
 
 

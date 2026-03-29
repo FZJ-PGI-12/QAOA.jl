@@ -1,4 +1,4 @@
-# [Prime-Number QUBOs with the Mean-Field AOA] (@id QANN)
+# [Prime-Number QUBOs with the Mean-Field AOA](@id PrimeQUBO)
 
 !!! note
      The paper [Factoring integers with sublinear resources on a superconducting quantum processor](https://arxiv.org/pdf/2212.12372.pdf) derives a QUBO problem equivalent to factorizing the 48-bit integer `261980999226229`. Here, we show that the ground state of this QUBO Hamiltonian can also be obtained with the mean-field AOA. Have a look into the corresponding [notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/prime_number.ipynb).

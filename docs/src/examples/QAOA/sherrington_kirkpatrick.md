@@ -1,4 +1,4 @@
-# [Sherrignton-Kirkpatrick Model] (@id SKModel)
+# [Sherrignton-Kirkpatrick Model](@id SKModel)
 
 !!! note
     A [Jupyter notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/sherrington_kirkpatrick.ipynb) related to this example is available in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks).

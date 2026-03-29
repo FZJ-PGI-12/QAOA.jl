@@ -1,10 +1,10 @@
-# [Mean-Field Approximate Optimization Algorithm](@id MFAOA)
+# [Introduction to the Gaussian Fluctuation Analysis](@id flucs)
 
 !!! tip
-    For more details on the mean-field Approximate Optimization Algorithm, please consult [our paper](https://doi.org/10.1103/PRXQuantum.4.030335).
+    For more details on the Gaussian fluctuation analysis and mean-field Approximate Optimization Algorithm, please consult [our paper](https://arxiv.org/abs/2303.00329).
 
 !!! note
-    A [Jupyter notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/mean_field.ipynb) related to this example is available in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks). For a comparison between the QAOA and the mean-field AOA, have a look into our [SK](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/sherrington_kirkpatrick.ipynb) and [MaxCut](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/max_cut.ipynb) notebooks.
+    A [Jupyter notebook](https://github.com/FZJ-PGI-12/QAOA.jl/blob/master/notebooks/fluctuation_analysis.ipynb) related to this example is available in our [examples folder](https://github.com/FZJ-PGI-12/QAOA.jl/tree/master/notebooks).
 
 
 In close analogy to the QAOA, the mean-field Hamiltonian reads
@@ -48,8 +48,6 @@ m_i(t) = h_i + \sum_{j=1}^N J_{ij} n_j^z(t).
 \end{align}
 ```
 
-## Mean-Field Approximate Optimization
-
 To implement these dynamics within `QAOA.jl`, we begin by defining a schedule:
 ```julia
 using QAOA, LinearAlgebra
@@ -84,15 +82,15 @@ This is all we need to call the mean-field dynamics. The initial values are
 ```julia
 S = [[1., 0., 0.] for _ in 1:N-1]
 ```
-where we have taken into account that the _final spin is fixed_. The final vector of spins is then obtained via
+where we have taken into account that the _final spin is fixed_. The final vector of spins is then obtained as
 ```julia
-evolve!(S, mf_problem.local_fields, mf_problem.couplings, β, γ)
+S = evolve!(S, mf_problem.local_fields, mf_problem.couplings, β, γ)
 ```
 The energy expectation value in mean-field approximation is 
 ```julia
-E = expectation(S, mf_problem.local_fields, mf_problem.couplings)
+E = expectation(S[end], mf_problem.local_fields, mf_problem.couplings)
 ```
 and the solution of the algorithm can be retrieved by calling
 ```julia
-sol = mean_field_solution(S)
+sol = mean_field_solution(S[end])
 ```
