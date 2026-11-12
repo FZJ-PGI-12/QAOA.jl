@@ -13,22 +13,20 @@ using Yao: chain, put, repeat, H, Rx, Rz, rot, kron, Z, X, Y, matblock, Abstract
 """
     circuit(prob, sched; mixer = XMixer()) -> Yao block
 
-The QAOA for `prob` with the angles `sched` as a Yao.jl circuit on
-`nvariables(prob)` qubits, gate for gate the same algorithm as
-[`evolve!`](@ref):
+Returns the QAOA for `prob` with the angles `sched` as a `Yao.jl` circuit on `nvariables(prob)` qubits. Gate for gate, the circuit runs the same algorithm as [`evolve!`](@ref).
 
-- With the X mixer, the circuit starts with a Hadamard gate on every qubit,
-  which turns |0…0⟩ into the usual initial state. With an [`XYMixer`](@ref),
-  apply the circuit to your own initial state, such as
-  `ArrayReg(dicke_state(n, k))`.
-- The phase separator of layer `k` is an `Rz` gate per field and an
-  `exp(-iθ ZᵢZⱼ/2)` gate per nonzero coupling. Since a measured 1 means
-  `σ = +1`, each spin is `σᵢ = -Zᵢ`.
-- The mixer is an `Rx` gate per qubit, or one two-qubit gate per pair of the
-  XY mixer.
+### Input
+- `prob`: An `IsingProblem` or a `QUBOProblem`. A `QUBOProblem` is converted to its Ising form first, which changes the state by a global phase only.
+- `sched::Schedule`: The angles.
+- `mixer` (optional): [`XMixer()`](@ref XMixer) or an [`XYMixer`](@ref).
 
-A [`QUBOProblem`](@ref) is converted to its Ising form first; that changes
-the state by a global phase only.
+### Output
+- A `Yao.jl` block.
+
+### Notes
+- With the X mixer, the circuit starts with a Hadamard gate on every qubit, which turns ``|0 \\cdots 0\\rangle`` into the usual initial state. With an [`XYMixer`](@ref), apply the circuit to your own initial state, such as `ArrayReg(dicke_state(n, k))`.
+- The phase separator of layer ``k`` is an `Rz` gate per local field and an ``e^{-i\\theta Z_i Z_j/2}`` gate per nonzero coupling. Since a measured 1 means ``\\sigma_i = +1``, each spin is ``\\sigma_i = -Z_i``.
+- The mixer is an `Rx` gate per qubit, or one two-qubit gate per pair of the XY mixer.
 """
 function QAOA.circuit(prob::IsingProblem, sched::Schedule; mixer = XMixer())
     n = nvariables(prob)

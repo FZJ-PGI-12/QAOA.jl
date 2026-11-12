@@ -3,9 +3,7 @@
 """
     evolve!(ws, sched) -> ws
 
-Run the QAOA with the angles `sched` from the initial state. The final state
-is then in `ws.state`; [`probabilities`](@ref) and [`statevector`](@ref)
-give it in the usual form.
+Runs the QAOA with the angles `sched` from the initial state. The final state is then in `ws.state`; [`probabilities`](@ref) and [`statevector`](@ref) return it in the usual form.
 """
 function evolve!(ws::Workspace, sched::Schedule)
     _initialize!(ws)
@@ -19,10 +17,18 @@ end
     expectation(ws, sched) -> Float64
     expectation(prob, sched; kwargs...) -> Float64
 
-The expectation value of the objective in the final state of the QAOA with the
-angles `sched`: the average objective of the measured assignments, in the
-units of the problem. The second form builds a [`Workspace`](@ref) with the
-keywords `kwargs` first.
+Returns the expectation value of the cost function after the QAOA with the angles `sched`, i.e. the average cost function of the measured bitstrings.
+
+### Input
+- `ws::Workspace`: The workspace of the problem. Given a problem `prob` instead, a [`Workspace`](@ref) is built first, with the keywords `kwargs`.
+- `sched::Schedule`: The angles.
+
+### Notes
+This function computes
+```math
+\\langle \\hat C \\rangle = \\langle \\beta, \\gamma | \\hat C | \\beta, \\gamma \\rangle = \\sum_x C(x) \\, |\\langle x | \\beta, \\gamma \\rangle|^2,
+```
+where ``|\\beta, \\gamma\\rangle`` is the final state of the QAOA and the sum runs over all bitstrings ``x``.
 """
 expectation(ws::Workspace, sched::Schedule) = (evolve!(ws, sched); _objective_mean(ws))
 expectation(prob::AbstractProblem, sched::Schedule; kwargs...) =
@@ -64,9 +70,14 @@ end
     probabilities(ws, sched) -> Vector{Float64}
     probabilities(prob, sched; kwargs...) -> Vector{Float64}
 
-The probability of measuring each assignment after the QAOA with the angles
-`sched`. Entry `b + 1` belongs to the assignment whose variable `i` is bit
-`i - 1` of `b`: for an [`IsingProblem`](@ref), bit 1 means `σ[i] = +1`.
+Returns the probability of measuring each bitstring after the QAOA with the angles `sched`.
+
+### Input
+- `ws::Workspace`: The workspace of the problem. Given a problem `prob` instead, a [`Workspace`](@ref) is built first, with the keywords `kwargs`.
+- `sched::Schedule`: The angles.
+
+### Output
+- A vector of ``2^n`` probabilities. Entry `b + 1` belongs to the bitstring whose bit ``x_i`` is bit `i - 1` of the integer `b`. For an [`IsingProblem`](@ref), bit 1 means ``\\sigma_i = +1``.
 """
 probabilities(ws::Workspace, sched::Schedule) =
     (evolve!(ws, sched); _unfold(abs2.(ws.state) ./ (ws.folded ? 2 : 1), ws.folded))
@@ -77,8 +88,7 @@ probabilities(prob::AbstractProblem, sched::Schedule; kwargs...) =
     statevector(ws, sched) -> Vector{ComplexF64}
     statevector(prob, sched; kwargs...) -> Vector{ComplexF64}
 
-The final state of the QAOA with the angles `sched`, as `2^n` amplitudes in
-the order of [`probabilities`](@ref).
+Returns the final state of the QAOA with the angles `sched`, as ``2^n`` amplitudes in the order of [`probabilities`](@ref).
 """
 statevector(ws::Workspace, sched::Schedule) =
     (evolve!(ws, sched); _unfold(ws.state ./ (ws.folded ? sqrt(2) : 1), ws.folded))

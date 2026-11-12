@@ -10,24 +10,17 @@ abstract type AbstractMixer end
 """
     XMixer()
 
-The standard mixer. In a layer with angle `β`, every qubit `i` turns by
-`exp(-iβ Δ[i] X[i])`, where `Δ[i]` is the mixer factor of an
-[`IsingProblem`](@ref) (1 by default).
+The standard mixer of the QAOA. In a layer with angle ``\\beta``, it turns every qubit ``i`` by ``e^{-i\\beta \\Delta_i X_i}``, where ``\\Delta_i`` is the mixer factor of an [`IsingProblem`](@ref) (1 by default).
 """
 struct XMixer <: AbstractMixer end
 
 """
     XYMixer(pairs)
 
-A mixer that keeps the number of ones in every assignment: in a layer with
-angle `β`, it applies `exp(-iβ (XᵢXⱼ + YᵢYⱼ)/2)` to each pair `(i, j)` of
-qubits, in the given order. On two qubits, this operator moves amplitude
-between |01⟩ and |10⟩ and leaves |00⟩ and |11⟩ alone.
+A mixer that keeps the number of ones in every bitstring. In a layer with angle ``\\beta``, it applies ``e^{-i\\beta (X_i X_j + Y_i Y_j)/2}`` to each pair `(i, j)` in `pairs`, in the given order. On two qubits, this operator moves amplitude between ``|01\\rangle`` and ``|10\\rangle`` and leaves ``|00\\rangle`` and ``|11\\rangle`` alone.
 
-Use it for problems with the constraint that exactly `k` variables are 1,
-starting from [`dicke_state(n, k)`](@ref dicke_state): every assignment the
-QAOA reaches then satisfies the constraint. Pairs along a ring,
-`[(1, 2), (2, 3), …, (n, 1)]`, or between all variables are common choices.
+### Notes
+Use it for problems with the constraint that exactly ``k`` variables are 1, starting from [`dicke_state(n, k)`](@ref dicke_state): every bitstring the QAOA reaches then satisfies the constraint. Pairs along a ring, `[(1, 2), (2, 3), …, (n, 1)]`, or between all variables are common choices.
 """
 struct XYMixer <: AbstractMixer
     pairs::Vector{Tuple{Int,Int}}
@@ -54,8 +47,7 @@ end
 """
     dicke_state(n, k) -> Vector{ComplexF64}
 
-The equal superposition of all assignments of `n` qubits with exactly `k`
-ones, the usual initial state for the [`XYMixer`](@ref).
+Returns the equal superposition of all bitstrings of `n` qubits with exactly `k` ones, the usual initial state for the [`XYMixer`](@ref).
 """
 function dicke_state(n::Integer, k::Integer)
     0 ≤ k ≤ n || throw(ArgumentError("need 0 ≤ k ≤ n, got k = $k, n = $n"))
@@ -67,23 +59,18 @@ end
     Workspace(prob; mixer = XMixer(), initial_state = nothing, symmetry = true,
               threaded = Threads.nthreads() > 1)
 
-Everything a QAOA run on `prob` needs, computed or allocated once: the
-objective of every assignment and the state vector. Reuse a workspace for many
-schedules of the same problem, as an angle optimization does.
+A container holding everything a QAOA run on `prob` needs, computed or allocated once: the cost function of every bitstring and the state vector. Reuse a workspace for many schedules of the same problem, as an optimization of the angles does.
 
-- `mixer`: [`XMixer()`](@ref XMixer) or an [`XYMixer`](@ref).
-- `initial_state`: a vector of `2^n` amplitudes; by default every qubit starts
-  in |+⟩.
-- `symmetry`: if the objective does not change when all variables flip (an
-  [`IsingProblem`](@ref) without fields, such as MaxCut), the QAOA state has
-  the same symmetry, and the workspace stores only half of it. This halves
-  memory and time without changing any result. It needs the X mixer and the
-  default initial state; `symmetry = false` turns it off.
-- `threaded`: split the work on states of `2^15` amplitudes or more over
-  Julia's threads (start Julia with `--threads`).
+### Input
+- `prob`: The problem.
+- `mixer` (optional): [`XMixer()`](@ref XMixer) or an [`XYMixer`](@ref).
+- `initial_state` (optional): A vector of ``2^n`` amplitudes. By default, every qubit starts in the state ``|+\\rangle``.
+- `symmetry::Bool=true` (optional): Whether to store only half of the state if the cost function allows it, see below.
+- `threaded::Bool` (optional): Whether to split the work on states of ``2^{15}`` amplitudes or more over Julia's threads. Start Julia with `--threads` to use it.
 
-The objective of every assignment takes 8 bytes, or 2 for objectives with
-integer weights, and the state 16 bytes; a gradient needs another 16.
+### Notes
+- If the cost function does not change when all variables flip, as for an [`IsingProblem`](@ref) without local fields such as MaxCut, the QAOA state has the same symmetry. The workspace then stores only half of it, which halves memory and time without changing any result. This needs the X mixer and the default initial state.
+- The cost function of every bitstring takes 8 bytes, or 2 for cost functions with integer weights, and the state 16 bytes. A gradient needs another 16.
 """
 mutable struct Workspace{P<:AbstractProblem,D<:Union{DenseDiagonal,TableDiagonal},M<:AbstractMixer}
     const problem::P

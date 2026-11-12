@@ -18,8 +18,7 @@ _edge_list(g::AbstractGraph) = [(src(e), dst(e)) for e in edges(g)]
 """
     max_cut(g::AbstractGraph) -> IsingProblem
 
-The MaxCut problem on the graph `g`, with the edge weights of `g` (1 for an
-unweighted graph); see [`max_cut`](@ref).
+Wrapper function setting up an instance of the MaxCut problem for the graph `g` from `Graphs.jl`, with the edge weights of `g` (1 for an unweighted graph). See [`max_cut`](@ref).
 """
 function QAOA.max_cut(g::AbstractGraph)
     pairs = _edge_list(g)
@@ -30,7 +29,7 @@ end
 """
     min_vertex_cover(g::AbstractGraph; penalty = 2) -> QUBOProblem
 
-The minimum vertex cover of the graph `g`; see [`min_vertex_cover`](@ref).
+Wrapper function setting up an instance of the minimum vertex cover problem for the graph `g` from `Graphs.jl`. See [`min_vertex_cover`](@ref).
 """
 QAOA.min_vertex_cover(g::AbstractGraph; penalty::Real = 2) =
     QAOA.min_vertex_cover(nv(g), _edge_list(g); penalty)

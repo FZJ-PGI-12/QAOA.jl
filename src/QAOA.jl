@@ -35,8 +35,7 @@ include("solve.jl")
 """
     QAOA.circuit(prob, sched)
 
-The QAOA for `prob` with the angles `sched` as a [Yao.jl](https://github.com/QuantumBFS/Yao.jl)
-circuit, for running it elsewhere or exporting it. Available after `using Yao`.
+Returns the QAOA for `prob` with the angles `sched` as a [`Yao.jl`](https://github.com/QuantumBFS/Yao.jl) circuit, to run it elsewhere or to export it. Note that this function is available only after `using Yao`.
 """
 function circuit end
 

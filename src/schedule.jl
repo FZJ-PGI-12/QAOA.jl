@@ -3,21 +3,20 @@
 """
     Schedule(β, γ)
 
-The angles of a QAOA with `p` layers, one pair `β[k]`, `γ[k]` per layer `k`.
+A container holding the angles of a QAOA with ``p`` layers, one pair ``\\beta_k``, ``\\gamma_k`` per layer ``k``.
 
-The QAOA starts with every qubit in state |+⟩, which gives every assignment
-the same amplitude. Each layer `k` then does two things:
+### Input
+- `β::AbstractVector`: The angles of the mixer.
+- `γ::AbstractVector`: The angles of the phase separator, in units of the [`fieldscale`](@ref) of the problem.
 
-1. It multiplies the amplitude of every assignment by the phase
-   `exp(-iγ[k] C / s)`, where `C` is the objective of that assignment and `s`
-   the problem's [`fieldscale`](@ref). For a minimization, the phase is
-   `exp(+iγ[k] C / s)`.
-2. It applies the mixer with angle `β[k]`. The default mixer turns every
-   qubit `i` by `exp(-iβ[k] Δ[i] X[i])`, where `Δ[i]` is 1 unless the problem
-   sets it.
+Both vectors must have the same length ``p``.
 
-`β` and `γ` must have the same length `p`. [`linear_schedule`](@ref) builds the
-usual starting point, and [`optimize_schedule`](@ref) tunes the angles.
+### Notes
+The QAOA starts with every qubit in the state ``|+\\rangle``, which gives every bitstring the same amplitude. Each layer ``k`` then does two things:
+1. It multiplies the amplitude of every bitstring by the phase ``e^{-i\\gamma_k C / s}``, where ``C`` is the cost function of that bitstring and ``s`` the [`fieldscale`](@ref) of the problem. For a minimization, the phase is ``e^{+i\\gamma_k C / s}``.
+2. It applies the mixer with angle ``\\beta_k``. The default mixer turns every qubit ``i`` by ``e^{-i\\beta_k \\Delta_i X_i}``, where ``\\Delta_i`` is 1 unless the problem sets it.
+
+[`linear_schedule`](@ref) builds the usual starting point, and [`optimize_schedule`](@ref) tunes the angles.
 """
 struct Schedule{T<:AbstractFloat}
     β::Vector{T}
@@ -33,8 +32,7 @@ end
 """
     Schedule(β::AbstractVector, γ::AbstractVector)
 
-Build a schedule from any two real vectors, promoted to a common
-floating-point type.
+Returns a [`Schedule`](@ref) built from any two real vectors, promoted to a common floating-point type.
 """
 function Schedule(β::AbstractVector{<:Real}, γ::AbstractVector{<:Real})
     T = float(promote_type(eltype(β), eltype(γ)))
@@ -76,16 +74,21 @@ end
 """
     linear_schedule(p, τ = 0.5; T = Float64)
 
-The usual starting schedule: over `p` layers, the angles `γ` grow and the
-angles `β` shrink linearly,
+Returns a linear annealing schedule with `p` layers, the usual starting point of the QAOA.
 
-    γ[k] = τ k / p,    β[k] = τ (1 - (k - 1) / p),    k = 1, …, p.
+### Input
+- `p::Integer`: The number of layers.
+- `τ::Real=0.5` (optional): The length of one annealing step.
+- `T=Float64` (optional): The floating-point type of the angles.
 
-This is a quantum annealing from the mixer to the objective, cut into `p`
-steps of length `τ`, and the same schedule as in MFAOA.jl. Because `γ` is
-measured in units of the problem's [`fieldscale`](@ref), the same `τ` suits
-problems of any size and units. With more layers, the angles change more
-slowly from one layer to the next, which usually gives better solutions.
+### Output
+- A [`Schedule`](@ref) with the angles
+```math
+\\gamma_k = \\tau \\frac{k}{p}, \\qquad \\beta_k = \\tau \\Big(1 - \\frac{k - 1}{p}\\Big), \\qquad k = 1, \\dots, p.
+```
+
+### Notes
+This is a quantum annealing from the mixer to the cost function, cut into ``p`` steps of length ``\\tau``, and the same schedule as in `MFAOA.jl`. Since ``\\gamma`` is measured in units of the [`fieldscale`](@ref) of the problem, the same ``\\tau`` suits problems of any size and units. With more layers, the angles change more slowly from one layer to the next, which usually gives better solutions.
 """
 function linear_schedule(p::Integer, τ::Real = 0.5; T::Type{<:AbstractFloat} = Float64)
     p ≥ 1 || throw(ArgumentError("need at least one layer, got p = $p"))
@@ -97,14 +100,14 @@ end
 """
     interpolate_schedule(sched) -> Schedule
 
-A schedule with one more layer, interpolated linearly from `sched`. Good
-angles for `p` layers, interpolated this way, are good starting angles for
-`p + 1` layers (the INTERP strategy of Zhou et al., Phys. Rev. X 10, 021067
-(2020)): with `θ` standing for `β` or `γ`,
+Returns a schedule with one more layer, interpolated linearly from `sched`.
 
-    θ′[k] = (k - 1)/p θ[k - 1] + (p - k + 1)/p θ[k],    k = 1, …, p + 1,
-
-where `θ[0] = θ[p + 1] = 0`.
+### Notes
+Good angles for ``p`` layers, interpolated this way, are good starting angles for ``p + 1`` layers. This is the INTERP strategy of [Zhou et al., Phys. Rev. X 10, 021067 (2020)](https://doi.org/10.1103/PhysRevX.10.021067). With ``\\theta`` standing for ``\\beta`` or ``\\gamma``,
+```math
+\\theta'_k = \\frac{k - 1}{p} \\theta_{k-1} + \\frac{p - k + 1}{p} \\theta_k, \\qquad k = 1, \\dots, p + 1,
+```
+where ``\\theta_0 = \\theta_{p+1} = 0``.
 """
 interpolate_schedule(sched::Schedule) =
     Schedule(_interpolate(sched.β), _interpolate(sched.γ))

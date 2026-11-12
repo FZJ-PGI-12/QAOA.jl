@@ -2,7 +2,7 @@
 
 `QAOA.jl` does not build a quantum circuit. It applies each layer of the
 QAOA to the state vector directly, with loops written for the two parts of a
-layer. This page explains these loops and gives timings, so that you can
+layer. On this page, we explain these loops and give timings, so that you can
 estimate how large a problem your computer can handle.
 
 ## Timings
@@ -25,7 +25,7 @@ symmetry. The expectation value and its derivatives with respect to all
 angles cost about three times one expectation value: for 14 qubits and 10
 layers, 3.5 ms, against 14 ms for JuliQAOA and 84 ms for QAOA.jl 1.4.
 
-## The two parts of a layer
+## The Two Parts of a Layer
 
 The phase separator multiplies every amplitude by a phase that depends only
 on the objective of its assignment. The [`Workspace`](@ref) computes these
@@ -43,14 +43,14 @@ sets the time. The workspace therefore turns the eleven lowest qubits block by
 block, inside 32 KiB of the state at a time, together with the phase
 separator. The remaining qubits are turned two per pass.
 
-## Halving by symmetry
+## Halving by Symmetry
 
 Many objectives do not change when all variables flip at once: MaxCut, the
 Sherrington–Kirkpatrick model and number partitioning, for example. Then the
 two amplitudes of an assignment and of its complement stay equal throughout
 the QAOA, and the workspace stores only one of them. This halves memory and
-time and changes no result. A workspace detects the symmetry; `symmetry =
-false` turns it off. It needs the X mixer and the default initial state.
+time and changes no result. A workspace detects the symmetry by itself;
+`symmetry = false` turns it off. It needs the X mixer and the default initial state.
 
 ## Gradients
 
@@ -68,7 +68,7 @@ has at least `2^15` amplitudes. Start Julia with several threads, for example
 threads costs more than it saves. To use all cores for many small problems,
 run one problem per thread instead.
 
-## Memory and the largest problems
+## Memory and the Largest Problems
 
 Every stored assignment takes 16 bytes for its amplitude and 8 bytes for its
 objective, or 2 bytes with integer weights. A gradient needs another 16 bytes

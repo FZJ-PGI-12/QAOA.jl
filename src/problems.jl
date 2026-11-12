@@ -63,29 +63,27 @@ end
 """
     IsingProblem(h, J; Δ = nothing, offset = 0, sense = :min, scale = nothing)
 
-An optimization problem over spins `σ[i]` that are -1 or +1: minimize (or, with
-`sense = :max`, maximize)
+An optimization problem over spins ``\\sigma_i = \\pm 1``.
 
-    h' * σ + Σ_{i<j} J[i,j] σ[i] σ[j] + offset.
+### Input
+- `h::AbstractVector`: The local fields ``h_i``.
+- `J::AbstractMatrix`: The couplings ``J_{ij}``, symmetric with a zero diagonal. `J` can be dense or sparse.
+- `Δ` (optional): One positive factor per spin on the mixer angles ``\\beta``. The default, `nothing`, means 1 for every spin.
+- `offset::Real=0` (optional): A constant added to the cost function.
+- `sense::Symbol=:min` (optional): `:min` to minimize the cost function, `:max` to maximize it.
+- `scale` (optional): The unit of the angles ``\\gamma``, see [`fieldscale`](@ref). The default makes the algorithm independent of the units of `h` and `J`; `scale = 1` uses those units themselves.
 
-`J` must be symmetric with a zero diagonal. Since `σ[i]^2 = 1`, a diagonal
-entry would only add a constant; put it into `offset` instead. `J` can be
-dense or sparse.
+### Output
+- An `IsingProblem` holding all relevant quantities.
 
-When the QAOA is measured, qubit `i` in state |1⟩ means `σ[i] = +1`, and |0⟩
-means `σ[i] = -1`.
+### Notes
+The cost function is
+```math
+C(\\sigma) = \\sum_{i=1}^N h_i \\sigma_i + \\sum_{i<j\\leq N} J_{ij} \\sigma_i \\sigma_j + \\mathrm{offset}.
+```
+Since ``\\sigma_i^2 = 1``, a diagonal entry of `J` would only add a constant; put it into `offset` instead. When the QAOA is measured, qubit ``i`` in the state ``|1\\rangle`` means ``\\sigma_i = +1``, and ``|0\\rangle`` means ``\\sigma_i = -1``.
 
-Two keywords tune the algorithm and rarely need to be set:
-
-- `Δ`: one positive factor per spin on the mixer angles `β` of a
-  [`Schedule`](@ref). The default, `nothing`, means 1 for every spin.
-- `scale`: the unit of the angles `γ`; see [`fieldscale`](@ref). The default
-  makes the algorithm independent of the units of `h` and `J`; `scale = 1`
-  uses those units themselves.
-
-The arguments mean the same as in [MFAOA.jl](https://github.com/Quicopt/MFAOA.jl),
-which runs the mean-field approximation of the same algorithm: a problem and a
-[`Schedule`](@ref) written for one package work in the other.
+The arguments mean the same as in [`MFAOA.jl`](https://github.com/Quicopt/MFAOA.jl), which runs the mean-field approximation of the same algorithm: a problem and a [`Schedule`](@ref) written for one package work in the other.
 """
 struct IsingProblem{T<:AbstractFloat,M<:AbstractMatrix{T},D<:Union{Nothing,Vector{T}}} <: AbstractProblem
     h::Vector{T}
@@ -129,18 +127,23 @@ _rms_field(h::AbstractVector, J::AbstractMatrix) =
 """
     QUBOProblem(Q; c = zeros(n), constant = 0, sense = :min)
 
-An optimization problem over binary variables `x[i]` that are 0 or 1: minimize
-(or, with `sense = :max`, maximize)
+An optimization problem over bits ``x_i \\in \\{0, 1\\}``.
 
-    x' * Q * x + c' * x + constant.
+### Input
+- `Q::AbstractMatrix`: The quadratic weights ``Q_{ij}``, used exactly as given: a symmetric matrix counts each pair of bits twice, an upper-triangular matrix once.
+- `c::AbstractVector=zeros(n)` (optional): The linear weights ``c_i``.
+- `constant::Real=0` (optional): A constant added to the cost function.
+- `sense::Symbol=:min` (optional): `:min` to minimize the cost function, `:max` to maximize it.
 
-`Q` is used exactly as given: a symmetric matrix counts each pair of
-variables twice, an upper-triangular matrix once. Diagonal entries act as
-linear terms, since `x[i]^2 = x[i]`. When the QAOA is measured, qubit `i` in
-state |1⟩ means `x[i] = 1`.
+### Output
+- A `QUBOProblem` holding all relevant quantities.
 
-The angles `γ` are measured in units of the [`fieldscale`](@ref) of the same
-problem in Ising form, `IsingProblem(prob)`.
+### Notes
+The cost function is
+```math
+C(x) = \\sum_{i,j=1}^N Q_{ij} x_i x_j + \\sum_{i=1}^N c_i x_i + \\mathrm{constant}.
+```
+Diagonal entries of `Q` act as linear weights, since ``x_i^2 = x_i``. When the QAOA is measured, qubit ``i`` in the state ``|1\\rangle`` means ``x_i = 1``. The angles ``\\gamma`` are measured in units of the [`fieldscale`](@ref) of the same problem in Ising form, `IsingProblem(prob)`.
 """
 struct QUBOProblem{T<:AbstractFloat,M<:AbstractMatrix{T}} <: AbstractProblem
     Q::M
@@ -165,10 +168,17 @@ end
 """
     IsingProblem(prob::QUBOProblem; Δ = nothing, scale = nothing)
 
-The same problem in Ising form, with `x = (1 + σ) / 2`. The pair terms
-`Q[i,j] x[i] x[j] + Q[j,i] x[j] x[i]` become the coupling
-`J[i,j] = (Q[i,j] + Q[j,i]) / 4`. The weight of `x[i]` alone, `c[i] + Q[i,i]`,
-goes half into `h[i]` and half into the offset.
+Returns the QUBO problem `prob` in Ising form, with ``x_i = (1 + \\sigma_i)/2``.
+
+### Input
+- `prob::QUBOProblem`: The problem to be converted.
+- `Δ`, `scale` (optional): As for [`IsingProblem`](@ref).
+
+### Output
+- An `IsingProblem` with the same cost function and sense.
+
+### Notes
+The pair terms ``Q_{ij} x_i x_j + Q_{ji} x_j x_i`` become the coupling ``J_{ij} = (Q_{ij} + Q_{ji})/4``. The local fields are ``h_i = (c_i + Q_{ii})/2 + \\sum_j J_{ij}``, and the remaining constants go into the offset.
 """
 function IsingProblem(prob::QUBOProblem{T}; Δ::Union{Nothing,AbstractVector} = nothing,
                       scale::Union{Nothing,Real} = nothing) where {T}
@@ -203,19 +213,19 @@ end
     GeneralProblem(values; sense = :min, scale = nothing)
     GeneralProblem(f, n; sense = :min, scale = nothing)
 
-An optimization problem given by the objective value of every assignment of
-`n` binary variables, for objectives that are not quadratic, such as
-satisfiability problems.
+An optimization problem given by the cost function of every bitstring, for cost functions that are not quadratic, such as those of satisfiability problems.
 
-`values[b + 1]` is the objective of the assignment whose variable `x[i]` is
-bit `i - 1` of the integer `b`, so `values` has length `2^n`. The second form
-evaluates `f(x)` for every assignment, with `x` a `Vector{Int8}` of zeros and
-ones. `f` must not keep `x`, which is reused.
+### Input
+- `values::AbstractVector`: The cost function of every bitstring of ``n`` bits, so `values` has length ``2^n``. `values[b + 1]` belongs to the bitstring whose bit ``x_i`` is bit `i - 1` of the integer `b`.
+- `f`, `n::Integer`: Alternatively, a function `f(x)` returning the cost function of the bitstring `x`, a `Vector{Int8}` of `n ≤ 30` zeros and ones. Note that `f` must not keep `x`, which is reused.
+- `sense::Symbol=:min` (optional): `:min` to minimize the cost function, `:max` to maximize it.
+- `scale` (optional): The unit of the angles ``\\gamma``, see [`fieldscale`](@ref).
 
-`scale` is the unit of the angles `γ`. By default, it is the root mean square,
-over all assignments and variables, of half the change of the objective when
-one variable flips. For a quadratic objective, this equals the
-[`fieldscale`](@ref) of the problem in Ising form.
+### Output
+- A `GeneralProblem` holding all relevant quantities.
+
+### Notes
+By default, `scale` is the root mean square, over all bitstrings and bits, of half the change of the cost function when one bit flips. For a quadratic cost function, this equals the [`fieldscale`](@ref) of the problem in Ising form.
 """
 struct GeneralProblem{T<:AbstractFloat} <: AbstractProblem
     values::Vector{T}
@@ -273,7 +283,7 @@ end
 """
     nvariables(prob)
 
-The number of binary variables of `prob`, which is the number of qubits.
+Returns the number of variables of `prob`, which is the number of qubits of the QAOA.
 """
 nvariables(prob::IsingProblem) = length(prob.h)
 nvariables(prob::QUBOProblem) = length(prob.c)
@@ -291,18 +301,14 @@ Base.eltype(::GeneralProblem{T}) where {T} = T
 """
     fieldscale(prob) -> s
 
-The unit in which a [`Schedule`](@ref) measures the angles `γ` for `prob`.
+Returns the unit ``s`` in which a [`Schedule`](@ref) measures the angles ``\\gamma`` for `prob`.
 
-In layer `k`, the QAOA multiplies the amplitude of every assignment by a phase
-`exp(-iγ[k] C / s)`, where `C` is the objective of that assignment (with the
-opposite sign for a minimization). Unless `scale` was given when the problem
-was built, `s` is the root mean square of the local field
-`m[i] = h[i] + Σⱼ J[i,j] σ[j]` over all spins `i` and random spins `σ`:
-
-    s = sqrt((Σᵢ hᵢ² + Σᵢⱼ Jᵢⱼ²) / n).
-
-Multiplying the objective by a constant multiplies `s` by the same constant,
-so the same angles suit problems in any units.
+### Notes
+In layer ``k``, the QAOA multiplies the amplitude of every bitstring by the phase ``e^{-i\\gamma_k C / s}``, where ``C`` is the cost function of that bitstring (with the opposite sign for a minimization). Unless `scale` was given when the problem was built, ``s`` is the root mean square of the local field ``m_i = h_i + \\sum_j J_{ij} \\sigma_j`` over all spins ``i`` and random spins ``\\sigma``,
+```math
+s = \\sqrt{\\frac{1}{N} \\Big(\\sum_{i=1}^N h_i^2 + \\sum_{i,j=1}^N J_{ij}^2\\Big)}.
+```
+Multiplying the cost function by a constant multiplies ``s`` by the same constant, so the same angles suit problems in any units.
 """
 fieldscale(prob::IsingProblem) = prob.scale
 fieldscale(prob::QUBOProblem) = fieldscale(IsingProblem(prob))
@@ -313,9 +319,15 @@ fieldscale(prob::GeneralProblem) = prob.scale
     objective(prob::QUBOProblem, x)
     objective(prob::GeneralProblem, x)
 
-The objective value of an assignment, including the offset or constant. `σ`
-holds spins -1 and +1, `x` holds bits 0 and 1. Maximization problems report
-the value as stated, without a sign change.
+Returns the cost function of `prob` for a single bitstring, including the offset or constant.
+
+### Input
+- `prob`: The problem.
+- `σ::AbstractVector`: The spins, -1 or +1, for an `IsingProblem`.
+- `x::AbstractVector`: The bits, 0 or 1, for the other problems.
+
+### Output
+- The value of the cost function. Note that maximization problems report the value as it is, without a change of sign.
 """
 objective(prob::IsingProblem, σ::AbstractVector) =
     dot(prob.h, σ) + dot(σ, prob.J, σ) / 2 + prob.offset

@@ -4,15 +4,20 @@
     optimize_schedule(ws, sched; maxiter = 500, gtol = 1e-6) -> (Schedule, Float64)
     optimize_schedule(prob, sched; maxiter, gtol, kwargs...) -> (Schedule, Float64)
 
-Angles near `sched` that optimize the expectation value of the objective
-(minimize it for `sense = :min`, maximize it for `:max`), and that expectation
-value.
+Optimizes the angles of the QAOA, starting from `sched`.
 
-The search is a local one: the BFGS method, starting from `sched`, with exact
-derivatives from [`expectation_and_gradient!`](@ref). It stops when no
-derivative exceeds `gtol` in units of the [`fieldscale`](@ref), or after
-`maxiter` steps. The second form builds a [`Workspace`](@ref) with the
-keywords `kwargs` first.
+### Input
+- `ws::Workspace`: The workspace of the problem. Given a problem `prob` instead, a [`Workspace`](@ref) is built first, with the keywords `kwargs`.
+- `sched::Schedule`: The initial angles.
+- `maxiter::Integer=500` (optional): The maximum number of optimization steps.
+- `gtol::Real=1e-6` (optional): The optimization stops when no derivative exceeds `gtol` in units of the [`fieldscale`](@ref).
+
+### Output
+- The optimized `Schedule`.
+- The expectation value of the cost function for these angles.
+
+### Notes
+The search is a local one: the BFGS method with exact derivatives from [`expectation_and_gradient!`](@ref). It minimizes the expectation value for `sense = :min` and maximizes it for `sense = :max`.
 """
 function optimize_schedule(ws::Workspace, sched::Schedule; maxiter::Integer = 500, gtol::Real = 1e-6)
     p = length(sched)
@@ -27,11 +32,20 @@ optimize_schedule(prob::AbstractProblem, sched::Schedule; maxiter::Integer = 500
     optimize_schedule(ws, p::Integer; τ = 0.5, maxiter = 500, gtol = 1e-6) -> (Schedule, Float64)
     optimize_schedule(prob, p::Integer; τ, maxiter, gtol, kwargs...) -> (Schedule, Float64)
 
-Optimized angles for `p` layers, found layer by layer: optimize one layer,
-starting from [`linear_schedule(1, τ)`](@ref linear_schedule); then, for each
-further layer, start from the [`interpolate_schedule`](@ref) of the previous
-optimum. Good angles usually change smoothly with the number of layers, so
-each search starts close to its optimum.
+Optimizes the angles of `p` layers, one layer at a time.
+
+### Input
+- `ws::Workspace`: The workspace of the problem. Given a problem `prob` instead, a [`Workspace`](@ref) is built first, with the keywords `kwargs`.
+- `p::Integer`: The number of layers.
+- `τ::Real=0.5` (optional): The step length of [`linear_schedule(1, τ)`](@ref linear_schedule), the starting point for the first layer.
+- `maxiter`, `gtol` (optional): As for a given initial schedule, see above.
+
+### Output
+- The optimized `Schedule`.
+- The expectation value of the cost function for these angles.
+
+### Notes
+First, one layer is optimized, starting from `linear_schedule(1, τ)`. Each further layer then starts from the [`interpolate_schedule`](@ref) of the previous optimum. Good angles usually change smoothly with the number of layers, so each search starts close to its optimum.
 """
 function optimize_schedule(ws::Workspace, p::Integer; τ::Real = 0.5, maxiter::Integer = 500, gtol::Real = 1e-6)
     p ≥ 1 || throw(ArgumentError("need at least one layer, got p = $p"))

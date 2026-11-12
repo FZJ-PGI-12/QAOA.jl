@@ -1,46 +1,38 @@
-# [Schedules and annealing](@id Schedules)
+# [Schedules and Annealing](@id Schedules)
 
-A [`Schedule`](@ref) holds the angles `β[k]` and `γ[k]` of the `p` layers of
-the QAOA. This page shows three ways to choose them: annealing, a schedule of
-your own, and optimization. All examples use MaxCut on the Petersen graph,
-whose largest cut has 12 edges:
+A [`Schedule`](@ref) holds the angles ``\beta_k`` and ``\gamma_k`` of the ``p`` layers of the QAOA. On this page, we show three ways to choose them: annealing, a schedule of your own, and optimization. As in the [MaxCut](@ref MaxCut) example, we take the Petersen graph, whose largest cut has 12 edges:
 
 ```@example schedules
 using QAOA
 petersen_edges = [(1, 2), (1, 5), (1, 6), (2, 3), (2, 7), (3, 4), (3, 8), (4, 5), (4, 9),
                   (5, 10), (6, 8), (6, 9), (7, 9), (7, 10), (8, 10)]
-problem = max_cut(10, petersen_edges)
-ws = Workspace(problem)
+max_cut_problem = max_cut(10, petersen_edges)
+ws = Workspace(max_cut_problem)
 spins(b) = [2 * ((b >> (i - 1)) & 1) - 1 for i in 1:10]
-largest = [objective(problem, spins(b)) == 12 for b in 0:2^10-1]
+largest = [objective(max_cut_problem, spins(b)) == 12 for b in 0:2^10-1]
 probability_of_largest_cut(schedule) = sum(probabilities(ws, schedule)[largest])
 nothing # hide
 ```
 
 ## Annealing
 
-A quantum annealing turns the mixer slowly into the objective. Cut into `p`
-steps of length `τ`, it is a QAOA with the angles of
-[`linear_schedule(p, τ)`](@ref linear_schedule):
+A quantum annealing turns the mixer slowly into the cost function. Cut into ``p`` steps of length ``\tau``, it is a QAOA with the angles
 
 ```math
+\begin{align*}
 \gamma_k = \tau \frac{k}{p}, \qquad \beta_k = \tau \Big(1 - \frac{k - 1}{p}\Big).
+\end{align*}
 ```
 
-The total annealing time is `pτ`. Since `γ` is measured in units of the
-problem's [`fieldscale`](@ref), the same `τ` suits many problems; values
-between 0.5 and 0.7 usually work well. Longer annealing finds the largest cut
-more often:
+For this most basic case of a _linear_ annealing schedule, all we need is [`linear_schedule(p, τ)`](@ref linear_schedule). The total annealing time is ``p\tau``. Note that ``\gamma`` is measured in units of the [`fieldscale`](@ref) of the problem, so the same ``\tau`` suits many problems; values between 0.5 and 0.7 usually work well. Longer annealing finds the largest cut more often:
 
 ```@example schedules
 [probability_of_largest_cut(linear_schedule(p)) for p in (10, 20, 40, 80)]
 ```
 
-## A schedule of your own
+## A Schedule of Your Own
 
-Any two vectors of angles make a schedule. An annealing path `s(t)` from 0 to
-1 gives `γ[k] = τ s(tₖ)` and `β[k] = τ (1 - s(tₖ))`. A path that starts and
-ends slowly, `s(t) = sin²(πt/2)`:
+Any two vectors of angles make a schedule. Given an annealing path ``s(t)`` from 0 to 1, we can set ``\gamma_k = \tau s(t_k)`` and ``\beta_k = \tau (1 - s(t_k))``. For example, the path ``s(t) = \sin^2(\pi t/2)`` starts and ends slowly:
 
 ```@example schedules
 function sine_schedule(p, τ = 0.5)
@@ -54,36 +46,28 @@ For this problem, the linear path is better with few layers.
 
 ## Optimization
 
-[`optimize_schedule`](@ref) tunes the angles with the BFGS method, using exact
-derivatives. Started from a schedule, it finds a nearby optimum:
+[`optimize_schedule`](@ref) tunes the angles with the BFGS method, using exact gradients. Started from a schedule, it finds a nearby optimum:
 
 ```@example schedules
 tuned, value = optimize_schedule(ws, linear_schedule(3))
 value
 ```
 
-Given a number of layers instead, it builds the schedule layer by layer: it
-optimizes one layer, and then starts each further layer from the
-[`interpolate_schedule`](@ref) of the previous optimum. Good angles change
-smoothly with the number of layers, so each search starts close to its
-optimum.
+Alternatively, we can pass the number of layers. [`optimize_schedule`](@ref) then builds the schedule layer by layer: it optimizes one layer, and then starts each further layer from the [`interpolate_schedule`](@ref) of the previous optimum. Since good angles change smoothly with the number of layers, each search starts close to its optimum.
 
 ```@example schedules
 tuned, value = optimize_schedule(ws, 4)
 probability_of_largest_cut(tuned)
 ```
 
-## Other optimizers
+## Other Optimizers
 
-[`expectation_and_gradient!`](@ref) returns the expectation value and writes
-its derivatives with respect to `β` and `γ` into two vectors. A
-gradient-based optimizer needs nothing more. With [Optim.jl](https://github.com/JuliaNLSolvers/Optim.jl),
-for example:
+[`expectation_and_gradient!`](@ref) returns the expectation value and writes its derivatives with respect to ``\beta`` and ``\gamma`` into two vectors. A gradient-based optimizer needs nothing more. With [`Optim.jl`](https://github.com/JuliaNLSolvers/Optim.jl), for example, we can write:
 
 ```julia
 using Optim
 
-# the negative average cut and its gradient: Optim minimizes, the cut is maximized
+# the negative average cut and its gradient: Optim minimizes, but we maximize the cut
 function negative_cut!(F, G, angles)
     p = length(angles) ÷ 2
     schedule = Schedule(angles[1:p], angles[p+1:end])

@@ -3,14 +3,14 @@
 """
     Result
 
-The outcome of [`solve`](@ref):
+A container holding the outcome of [`solve`](@ref).
 
-- `σ`, `x`: the best measured assignment, as spins -1/+1 and as bits 0/1,
-  with `x = (1 + σ) / 2`;
-- `objective`: its objective value;
-- `expectation`: the expectation value of the objective in the final state;
-- `probability`: the probability of measuring exactly this assignment;
-- `schedule`: the angles that were used.
+### Fields
+- `σ`, `x`: The best measured bitstring, as spins -1/+1 and as bits 0/1, with ``x_i = (1 + \\sigma_i)/2``.
+- `objective`: Its cost function.
+- `expectation`: The expectation value of the cost function in the final state.
+- `probability`: The probability of measuring exactly this bitstring.
+- `schedule`: The angles that were used.
 """
 struct Result{T<:AbstractFloat}
     σ::Vector{Int8}
@@ -36,13 +36,19 @@ end
     solve(prob, sched; shots, rng, kwargs...) -> Result
     solve(prob; p = 20, τ = 0.5, shots, rng, kwargs...) -> Result
 
-Run the QAOA with the angles `sched`, measure it `shots` times, and return
-the best measured assignment in a [`Result`](@ref). With `shots = 0`, the
-most likely assignment is returned instead.
+Runs the QAOA with the angles `sched`, measures the final state `shots` times, and returns the best measured bitstring.
 
-The third form uses [`linear_schedule(p, τ)`](@ref linear_schedule), a
-quantum annealing cut into `p` layers. Optimized angles
-([`optimize_schedule`](@ref)) usually do better with few layers.
+### Input
+- `ws::Workspace`: The workspace of the problem. Given a problem `prob` instead, a [`Workspace`](@ref) is built first, with the keywords `kwargs`.
+- `sched::Schedule`: The angles. Without `sched`, [`linear_schedule(p, τ)`](@ref linear_schedule) is used, i.e. a quantum annealing cut into `p` layers.
+- `shots::Integer=1000` (optional): The number of measurements. With `shots = 0`, the most likely bitstring is returned instead.
+- `rng` (optional): The random-number generator for the measurements.
+
+### Output
+- A [`Result`](@ref).
+
+### Notes
+With few layers, optimized angles from [`optimize_schedule`](@ref) usually do better than the linear schedule.
 """
 function solve(ws::Workspace, sched::Schedule; shots::Integer = 1000, rng::AbstractRNG = Random.default_rng())
     shots ≥ 0 || throw(ArgumentError("shots must be nonnegative, got $shots"))

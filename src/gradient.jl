@@ -9,14 +9,10 @@
 """
     expectation_and_gradient!(∂β, ∂γ, ws, sched) -> Float64
 
-The [`expectation`](@ref) value of the objective after the QAOA with the angles
-`sched`, with its derivatives with respect to `sched.β` and `sched.γ` written
-into `∂β` and `∂γ`.
+Returns the [`expectation`](@ref) value of the cost function after the QAOA with the angles `sched`, and writes its derivatives with respect to `sched.β` and `sched.γ` into `∂β` and `∂γ`.
 
-The derivatives come from one backward pass through the layers (the adjoint
-method). It costs about as much as two more runs of the QAOA, whatever the
-number of layers, and needs one more state vector, which the workspace
-allocates the first time.
+### Notes
+The derivatives come from one backward pass through the layers (the adjoint method). This costs about as much as two more runs of the QAOA, for any number of layers, and needs one more state vector, which the workspace allocates the first time.
 """
 function expectation_and_gradient!(∂β::AbstractVector, ∂γ::AbstractVector, ws::Workspace, sched::Schedule)
     p = length(sched)
@@ -37,8 +33,7 @@ end
     expectation_and_gradient(ws, sched) -> (E, ∂β, ∂γ)
     expectation_and_gradient(prob, sched; kwargs...) -> (E, ∂β, ∂γ)
 
-The expectation value `E` of the objective and its derivatives with respect to
-the angles `β` and `γ`; see [`expectation_and_gradient!`](@ref).
+Returns the expectation value `E` of the cost function and its derivatives with respect to the angles `β` and `γ`, see [`expectation_and_gradient!`](@ref). Given a problem `prob`, a [`Workspace`](@ref) is built first, with the keywords `kwargs`.
 """
 function expectation_and_gradient(ws::Workspace, sched::Schedule)
     ∂β = zeros(length(sched))
