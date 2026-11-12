@@ -1,6 +1,9 @@
 # Welcome!
 
-`QAOA.jl` is a lightweight implementation of the [Quantum Approximate Optimization Algorithm (QAOA)](https://arxiv.org/abs/1411.4028) based on [`Yao.jl`](https://github.com/QuantumBFS/Yao.jl). Furthermore, it implements the [Mean-Field Approximate Optimization Algorithm](https://link.aps.org/doi/10.1103/PRXQuantum.4.030335), which is a useful tool to simulate quantum annealing and the QAOA in the mean-field approximation.
+`QAOA.jl` is a lightweight implementation of the [Quantum Approximate Optimization Algorithm (QAOA)](https://arxiv.org/abs/1411.4028) based on [`Yao.jl`](https://github.com/QuantumBFS/Yao.jl).
+
+!!! note "The mean-field AOA has moved to MFAOA.jl"
+    Up to version 1.4, `QAOA.jl` also implemented the [Mean-Field Approximate Optimization Algorithm](https://doi.org/10.1103/PRXQuantum.4.030335) (mean-field AOA). That algorithm now has its own package, [`MFAOA.jl`](https://github.com/Quicopt/MFAOA.jl), which also accepts QUBO problems and works as a JuMP optimizer. The Gaussian fluctuation analysis of the mean-field AOA (`evolve_fluctuations`) is available in `QAOA.jl` 1.4 and earlier.
 
 ## Installation
 
