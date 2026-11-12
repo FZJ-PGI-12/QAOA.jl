@@ -14,6 +14,28 @@
     @test likely.probability ≈ maximum(probabilities(ring, linear_schedule(30)))
 end
 
+"""
+    wrong_gradient!(g, x)
+
+The value `sum(x.^2)` with the gradient of its negative: every direction the
+optimizer takes leads uphill.
+"""
+function wrong_gradient!(g, x)
+    g .= -2 .* x
+    sum(abs2, x)
+end
+
+@testset "BFGS safeguards" begin
+    # a line search that never succeeds stops at the start
+    @test QAOA._bfgs(wrong_gradient!, [1.0, -2.0]; maxiter = 10, gtol = 1e-8) == [1.0, -2.0]
+    # an estimate that lost positive definiteness restarts as a scaled identity
+    g = [2.0, -1.0]
+    H, direction, slope, restarted = QAOA._descent_direction(-Matrix{Float64}(I, 2, 2), g)
+    @test restarted && slope < 0
+    @test H ≈ 0.05 * I && direction ≈ -0.05 * g
+    @test !last(QAOA._descent_direction(Matrix{Float64}(I, 2, 2), g))
+end
+
 @testset "optimize_schedule" begin
     prob = max_cut(8, gnp_edges(8, 0.5, 5))
     ws = Workspace(prob)

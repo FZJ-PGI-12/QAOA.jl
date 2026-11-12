@@ -60,4 +60,12 @@ end
     @test QAOA._diagonal(max_cut(6, gnp_edges(6, 0.6, 1)), false) isa QAOA.TableDiagonal
     @test QAOA._diagonal(random_ising(6), false) isa QAOA.DenseDiagonal
     @test QAOA._diagonal(GeneralProblem(x -> sum(x)^3, 6), false) isa QAOA.TableDiagonal
+    # integer weights too large for a table, and values on no grid, fall back to dense
+    heavy = IsingProblem(fill(6000.0, 6), zeros(6, 6))
+    general = GeneralProblem(x -> π * sum(x), 6)
+    for prob in (heavy, general)
+        d = QAOA._diagonal(prob, false)
+        @test d isa QAOA.DenseDiagonal
+        @test [QAOA._phase_value(d, b) for b in 1:64] ≈ phase_vector(prob) atol = 1e-12
+    end
 end

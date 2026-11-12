@@ -87,14 +87,8 @@ function _bfgs(objective, x0::Vector{Float64}; maxiter::Integer, gtol::Real)
     xnew, gnew = similar(x), similar(g)
     for _ in 1:maxiter
         maximum(abs, g) ≤ gtol && break
-        direction = -(H * g)
-        slope = dot(g, direction)
-        if slope ≥ 0                       # lost descent: start the estimate afresh
-            H = _initial_inverse_hessian(g)
-            fresh = true
-            direction = -(H * g)
-            slope = dot(g, direction)
-        end
+        H, direction, slope, restarted = _descent_direction(H, g)
+        fresh |= restarted
         step, newvalue = _backtrack!(xnew, gnew, objective, x, value, direction, slope)
         step == 0 && break
         _update_inverse_hessian!(H, xnew .- x, gnew .- g, fresh)
@@ -106,6 +100,23 @@ function _bfgs(objective, x0::Vector{Float64}; maxiter::Integer, gtol::Real)
         gain ≤ 1e-14 * max(abs(value), 1) && break
     end
     x
+end
+
+"""
+    _descent_direction(H, g) -> (H, direction, slope, restarted)
+
+The quasi-Newton direction `-H g` and its slope `gᵀ(-H g)`. The BFGS update
+keeps `H` positive definite, so the slope is negative; if rounding errors have
+destroyed that, `H` restarts from [`_initial_inverse_hessian`](@ref) and
+`restarted` is `true`.
+"""
+function _descent_direction(H::Matrix{Float64}, g::Vector{Float64})
+    direction = -(H * g)
+    slope = dot(g, direction)
+    slope < 0 && return H, direction, slope, false
+    H = _initial_inverse_hessian(g)
+    direction = -(H * g)
+    H, direction, dot(g, direction), true
 end
 
 """
