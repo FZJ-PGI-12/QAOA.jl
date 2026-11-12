@@ -140,7 +140,7 @@ linear terms, since `x[i]^2 = x[i]`. When the QAOA is measured, qubit `i` in
 state |1⟩ means `x[i] = 1`.
 
 The angles `γ` are measured in units of the [`fieldscale`](@ref) of the same
-problem in Ising form, [`IsingProblem(prob)`](@ref IsingProblem(::QUBOProblem)).
+problem in Ising form, `IsingProblem(prob)`.
 """
 struct QUBOProblem{T<:AbstractFloat,M<:AbstractMatrix{T}} <: AbstractProblem
     Q::M
