@@ -18,4 +18,7 @@ include("reference.jl")
     @testset "Optimization and solving" begin
         include("solve.jl")
     end
+    @testset "Extensions" begin
+        include("extensions.jl")
+    end
 end
