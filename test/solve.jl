@@ -50,4 +50,6 @@ end
     sk = sherrington_kirkpatrick(8)
     _, energy = optimize_schedule(sk, 2)
     @test energy < expectation(sk, linear_schedule(2))  # a minimization goes down
+    @test optimize_schedule(prob, start; symmetry = false)[2] ≈ value
+    @test expectation_and_gradient(prob, sched)[2] ≈ ∂β
 end

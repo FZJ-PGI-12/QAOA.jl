@@ -24,6 +24,20 @@ end
     @test objective(general, bits(9, n)) ≈ objective(ising, spins(9, n))
     @test fieldscale(IsingProblem(ising.h, sparse(J))) ≈ fieldscale(IsingProblem(ising.h, J))
     @test fieldscale(IsingProblem(ising.h, J; scale = 1)) == 1
+    sparse_ising = IsingProblem(QUBOProblem(sparse(qubo.Q); c = qubo.c, constant = -2.0))
+    @test sparse_ising.J isa SparseMatrixCSC
+    @test Matrix(sparse_ising.J) ≈ as_ising.J
+    @test sparse_ising.h ≈ as_ising.h && sparse_ising.offset ≈ as_ising.offset
+end
+
+@testset "Display" begin
+    @test sprint(show, IsingProblem(zeros(3), zeros(3, 3))) == "IsingProblem{Float64}: 3 spins, sense = :min"
+    @test sprint(show, QUBOProblem(zeros(2, 2); sense = :max)) == "QUBOProblem{Float64}: 2 variables, sense = :max"
+    @test sprint(show, GeneralProblem(zeros(8))) == "GeneralProblem{Float64}: 3 variables, sense = :min"
+    @test startswith(sprint(show, linear_schedule(2)), "Schedule{Float64} with 2 layers: β = ")
+    @test startswith(sprint(show, Workspace(max_cut(4, [(1, 2), (2, 3)]))), "Workspace for IsingProblem")
+    result = solve(max_cut(4, [(1, 2), (2, 3)]), linear_schedule(2); rng = Xoshiro(1))
+    @test startswith(sprint(show, result), "Result{Float64}: 4 variables, objective = ")
 end
 
 @testset "Problem builders" begin
