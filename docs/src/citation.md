@@ -1,15 +1,17 @@
 # Citation
 
-If you are using `QAOA.jl`, please cite our work:
+If you are using `QAOA.jl`, please cite our [article in the Journal of Open Source Software](https://doi.org/10.21105/joss.05364):
 ```
-@misc{https://doi.org/10.48550/arxiv.2303.00329,
-  doi = {10.48550/ARXIV.2303.00329},
-  url = {https://arxiv.org/abs/2303.00329},
-  author = {Misra-Spieldenner, Aditi and Bode, Tim and Schuhmacher, Peter K. and Stollenwerk, Tobias and Bagrets, Dmitry and Wilhelm, Frank K.},
-  keywords = {Quantum Physics (quant-ph), Disordered Systems and Neural Networks (cond-mat.dis-nn), FOS: Physical sciences, FOS: Physical sciences},
-  title = {Mean-Field Approximate Optimization Algorithm},
-  publisher = {arXiv},
+@article{Bode2023,
+  doi = {10.21105/joss.05364},
+  url = {https://doi.org/10.21105/joss.05364},
   year = {2023},
-  copyright = {arXiv.org perpetual, non-exclusive license}
+  publisher = {The Open Journal},
+  volume = {8},
+  number = {86},
+  pages = {5364},
+  author = {Bode, Tim and Bagrets, Dmitry and Misra-Spieldenner, Aditi and Stollenwerk, Tobias and Wilhelm, Frank K.},
+  title = {QAOA.jl: Toolkit for the Quantum and Mean-Field Approximate Optimization Algorithms},
+  journal = {Journal of Open Source Software}
 }
 ```

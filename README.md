@@ -7,7 +7,10 @@
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.05364/status.svg)](https://doi.org/10.21105/joss.05364)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8086188.svg)](https://doi.org/10.5281/zenodo.8086188)
 
-This package implements the [Quantum Approximate Optimization Algorithm](https://arxiv.org/abs/1411.4028) and the [Mean-Field Approximate Optimization Algorithm](https://link.aps.org/doi/10.1103/PRXQuantum.4.030335).
+This package implements the [Quantum Approximate Optimization Algorithm](https://arxiv.org/abs/1411.4028) (QAOA), simulated with [Yao.jl](https://github.com/QuantumBFS/Yao.jl).
+
+> [!NOTE]
+> **The mean-field AOA has moved to [MFAOA.jl](https://github.com/Quicopt/MFAOA.jl).** Up to version 1.4, QAOA.jl also implemented the [Mean-Field Approximate Optimization Algorithm](https://doi.org/10.1103/PRXQuantum.4.030335) (mean-field AOA). That algorithm now has its own package, MFAOA.jl, which also accepts QUBO problems and works as a JuMP optimizer. The Gaussian fluctuation analysis of the mean-field AOA (`evolve_fluctuations`) is available in QAOA.jl 1.4 and earlier.
 
 ## Installation
 
@@ -28,20 +31,4 @@ In case you need support or have encountered a problem with the package, you are
 
 ## Citations
 
-If you are using code from this repository, please [cite our work](https://doi.org/10.21105/joss.05364). Also consider our algorithmic paper:
-```
-@article{PRXQuantum.4.030335,
-  title = {Mean-Field Approximate Optimization Algorithm},
-  author = {Misra-Spieldenner, Aditi and Bode, Tim and Schuhmacher, Peter K. and Stollenwerk, Tobias and Bagrets, Dmitry and Wilhelm, Frank K.},
-  journal = {PRX Quantum},
-  volume = {4},
-  issue = {3},
-  pages = {030335},
-  numpages = {19},
-  year = {2023},
-  month = {Sep},
-  publisher = {American Physical Society},
-  doi = {10.1103/PRXQuantum.4.030335},
-  url = {https://link.aps.org/doi/10.1103/PRXQuantum.4.030335}
-}
-```
+If you are using code from this repository, please [cite our work](https://doi.org/10.21105/joss.05364).

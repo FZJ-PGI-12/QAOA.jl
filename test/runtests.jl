@@ -6,14 +6,6 @@ using Test, QAOA, Yao, Zygote, LinearAlgebra
         include("QAOA.jl")
     end
 
-    @testset "Mean-Field" begin
-      include("mean_field.jl")
-    end
-  
-    @testset "Fluctuations" begin
-      include("fluctuations.jl")
-    end
-
     @testset "Annealing" begin
       include("annealing.jl")
   end
